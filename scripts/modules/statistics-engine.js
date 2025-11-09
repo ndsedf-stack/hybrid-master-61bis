@@ -119,121 +119,67 @@ class StatisticsEngine {
       .sort((a, b) => b.value - a.value);
   }
   
-  // ==================== PROGRESSION TEMPORELLE ====================
+  // ==================== VUES GRAPHIQUES ====================
   
-  getProgressionData(weeksToShow = 8) {
-    const data = [];
-    const currentWeek = this.getCurrentWeek();
-    const startWeek = Math.max(1, currentWeek - weeksToShow + 1);
-    
-    for (let i = startWeek; i <= Math.min(currentWeek, 26); i++) {
-      const weekData = this.history[`week_${i}`];
-      const volume = this.calculateWeeklyVolume(i);
-      const sessions = Object.values(weekData || {}).filter(d => d.completed).length;
-      
-      data.push({
-        week: `S${i}`,
-        weekNumber: i,
-        volume,
-        sessions,
-        completionRate: Math.round((sessions / 3) * 100)
+  // Heatmap : 7 derniers jours
+  getLast7DaysMuscleMap() {
+    const today = new Date();
+    const days = [];
+    for (let i = 6; i >= 0; i--) {
+      const d = new Date(today);
+      d.setDate(today.getDate() - i);
+      const iso = d.toISOString().slice(0,10);
+      days.push({
+        date: iso,
+        muscles: ["pecs","dos"], // mock pour test
+        sets: Math.floor(Math.random() * 10)
       });
     }
-    
-    return data;
+    return days;
   }
   
-  getCurrentWeek() {
-    // Trouver la dernière semaine avec au moins une séance complétée
-    for (let week = 26; week >= 1; week--) {
-      const weekData = this.history[`week_${week}`];
-      if (Object.values(weekData).some(d => d.completed)) {
-        return week;
-      }
-    }
-    return 1; // Par défaut semaine 1
+  // Radar chart : sets par muscle
+  getSetCountPerMuscle(period = "30d") {
+    const data = this.getVolumeByMuscleGroup();
+    return {
+      labels: data.map(d => d.name),
+      datasets: [{
+        label: "Sets par muscle",
+        data: data.map(d => d.value),
+        backgroundColor: "rgba(255, 107, 107, 0.4)",
+        borderColor: "#ff6b6b"
+      }]
+    };
   }
   
-  // ==================== RECORDS PERSONNELS ====================
+  // Pie chart : répartition musculaire
+  getMuscleDistribution(period = "30d") {
+    const data = this.getVolumeByMuscleGroup();
+    return {
+      labels: data.map(d => d.name),
+      datasets: [{
+        data: data.map(d => d.value),
+        backgroundColor: ["#00d4aa","#ff6b6b","#1a1a2e","#ffa500","#4caf50"]
+      }]
+    };
+  }
   
-  getPersonalRecords() {
-    const prs = {};
-    
+  // Top exercices
+  getTopExercises(period = "30d") {
+    const exercises = {};
     for (const week in this.history) {
       for (const day in this.history[week]) {
-        const exercises = this.history[week][day].exercises || [];
-        
-        exercises.forEach(ex => {
-          if (!prs[ex.id] || ex.avgWeight > prs[ex.id].weight) {
-            prs[ex.id] = {
-              name: ex.name,
-              weight: ex.avgWeight,
-              reps: ex.totalReps,
-              volume: ex.volume,
-              week: parseInt(week.split('_')[1]),
-              date: this.history[week][day].date || 'N/A'
-            };
-          }
+        const dayData = this.history[week][day];
+        (dayData.exercises || []).forEach(ex => {
+          if (!exercises[ex.name]) exercises[ex.name] = 0;
+          exercises[ex.name]++;
         });
       }
     }
-    
-    return Object.values(prs).sort((a, b) => b.weight - a.weight);
-  }
-  
-  // ==================== PROGRESSION EXERCICE SPÉCIFIQUE ====================
-  
-  getExerciseProgress(exerciseId) {
-    const progress = [];
-    
-    for (let week = 1; week <= 26; week++) {
-      const weekData = this.history[`week_${week}`];
-      
-      for (const day in weekData) {
-        const exercise = weekData[day].exercises?.find(ex => ex.id === exerciseId);
-        if (exercise && exercise.avgWeight) {
-          progress.push({
-            week,
-            day,
-            weight: exercise.avgWeight,
-            reps: exercise.totalReps,
-            volume: exercise.volume,
-            rpe: exercise.avgRpe
-          });
-        }
-      }
-    }
-    
-    return progress;
-  }
-  
-  // ==================== ANALYSE TENDANCES ====================
-  
-  getVolumeGrowthRate() {
-    const progression = this.getProgressionData(26);
-    if (progression.length < 2) return 0;
-    
-    const firstWeek = progression[0].volume;
-    const lastWeek = progression[progression.length - 1].volume;
-    
-    return Math.round(((lastWeek - firstWeek) / firstWeek) * 100);
-  }
-  
-  getAverageSessionDuration() {
-    let totalDuration = 0;
-    let count = 0;
-    
-    for (const week in this.history) {
-      for (const day in this.history[week]) {
-        const session = this.history[week][day];
-        if (session.completed && session.duration) {
-          totalDuration += session.duration;
-          count++;
-        }
-      }
-    }
-    
-    return count > 0 ? Math.round(totalDuration / count) : 0;
+    return Object.entries(exercises)
+      .map(([name, count]) => ({ name, count }))
+      .sort((a,b) => b.count - a.count)
+      .slice(0,10);
   }
   
   // ==================== UTILITAIRES ====================
