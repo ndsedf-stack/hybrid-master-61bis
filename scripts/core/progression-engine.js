@@ -1,4 +1,4 @@
-**
+/**
  * HYBRID MASTER 51 - MOTEUR DE PROGRESSION
  * Calcule la progression des poids et volumes sur 26 semaines
  */
