@@ -21,6 +21,7 @@ export class StatisticsUI {
     this.container.innerHTML = `
       <h2>📊 Statistiques</h2>
       <section id="summary-global" class="weekly-summary"></section>
+      <section id="progression-8weeks"></section>
       <section id="heatmap"></section>
       <section id="radar"></section>
       <section id="pie"></section>
@@ -28,6 +29,7 @@ export class StatisticsUI {
     `;
 
     this.renderSummaryGlobal();
+    this.renderProgression8Weeks();
     this.renderHeatmap();
     this.renderRadar();
     this.renderPie();
@@ -77,6 +79,90 @@ export class StatisticsUI {
         <div class="summary-label">Croissance du volume</div>
       </div>
     `;
+  }
+
+  // ==================== PROGRESSION 8 SEMAINES ====================
+  renderProgression8Weeks() {
+    const data = this.engine.getProgressionData(8);
+    const section = this.container.querySelector("#progression-8weeks");
+    section.innerHTML = `<h3>Progression sur 8 semaines</h3><canvas id="progressionChart"></canvas>`;
+    const ctx = section.querySelector("#progressionChart")?.getContext("2d");
+
+    if (!data || !data.length) {
+      section.innerHTML += "<p>Aucune donnée disponible</p>";
+      return;
+    }
+
+    const labels = data.map(d => d.week);
+    const volumes = data.map(d => d.volume);
+    const sessions = data.map(d => d.sessions);
+    const completionRates = data.map(d => d.completionRate);
+
+    if (ctx && typeof Chart !== "undefined") {
+      new Chart(ctx, {
+        type: "bar",
+        data: {
+          labels,
+          datasets: [
+            {
+              label: "Volume (kg)",
+              data: volumes,
+              backgroundColor: "rgba(255, 107, 53, 0.6)",
+              borderColor: "#ff6b35",
+              borderWidth: 1,
+              yAxisID: "y"
+            },
+            {
+              label: "Séances",
+              data: sessions,
+              type: "line",
+              borderColor: "#00d4aa",
+              backgroundColor: "#00d4aa",
+              yAxisID: "y1"
+            },
+            {
+              label: "Complétion (%)",
+              data: completionRates,
+              type: "line",
+              borderColor: "#ffa500",
+              backgroundColor: "#ffa500",
+              yAxisID: "y2"
+            }
+          ]
+        },
+        options: {
+          responsive: true,
+          scales: {
+            y: {
+              type: "linear",
+              position: "left",
+              title: { display: true, text: "Volume" },
+              grid: { color: "#444" },
+              ticks: { color: "#fff" }
+            },
+            y1: {
+              type: "linear",
+              position: "right",
+              title: { display: true, text: "Séances" },
+              grid: { drawOnChartArea: false },
+              ticks: { color: "#00d4aa" }
+            },
+            y2: {
+              type: "linear",
+              position: "right",
+              title: { display: true, text: "Complétion (%)" },
+              grid: { drawOnChartArea: false },
+              ticks: { color: "#ffa500" },
+              min: 0,
+              max: 100
+            }
+          },
+          plugins: {
+            legend: { labels: { color: "#fff" } }
+          }
+        }
+      });
+    }
   }
 
   // ==================== HEATMAP ====================
