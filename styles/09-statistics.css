@@ -350,7 +350,6 @@
 .summary-icon {
   font-size: 1.5rem;
   margin-bottom: 0.5rem;
-}
 
 .summary-value {
   font-size: 1.5rem;
@@ -391,6 +390,58 @@
   font-size: 0.85rem;
   color: var(--text-secondary);
   line-height: 1.5;
+}
+
+/* ============================================================================
+   CUSTOM CHARTS (Heatmap, Radar, Pie, Top Exercises)
+   ============================================================================ */
+
+.heatmap-grid {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 6px;
+  margin-top: 1rem;
+}
+
+.heatmap-grid .day {
+  background: var(--bg-secondary);
+  padding: 0.5rem;
+  border-radius: 6px;
+  text-align: center;
+  color: #ccc;
+  font-size: 0.75rem;
+}
+
+.heatmap-grid .day.active {
+  background: var(--color-accent);
+  color: #fff;
+}
+
+.radar-chart,
+.pie-chart {
+  height: 260px;
+  background: var(--bg-secondary);
+  border-radius: 8px;
+  display: grid;
+  place-items: center;
+  margin-top: 1rem;
+}
+
+.top-exercises {
+  padding-left: 1rem;
+  margin-top: 1rem;
+  color: var(--text-primary);
+}
+
+.top-exercises li {
+  margin-bottom: 0.5rem;
+  font-size: 0.85rem;
+  color: var(--text-secondary);
+}
+
+.top-exercises li::before {
+  content: "• ";
+  color: var(--accent-color);
 }
 
 /* ============================================================================
