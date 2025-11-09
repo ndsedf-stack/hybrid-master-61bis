@@ -1,0 +1,246 @@
+/* ================================================================ */
+/* 04-LAYOUT.CSS - Grilles et Layouts */
+/* ================================================================ */
+
+/* ================================================================ */
+/* CONTAINER */
+/* ================================================================ */
+
+.container {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: var(--spacing-md);
+}
+
+@media (max-width: 768px) {
+  .container {
+    padding: var(--spacing-sm);
+  }
+}
+
+/* ================================================================ */
+/* HEADER */
+/* ================================================================ */
+
+.main-header {
+  background: var(--bg-secondary);
+  padding: var(--spacing-xl) 0;
+  margin-bottom: var(--spacing-xl);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+  border-bottom: 3px solid var(--primary-color);
+}
+
+.header-content {
+  text-align: center;
+}
+
+.logo {
+  font-size: 2.5rem;
+  font-weight: 900;
+  color: var(--primary-color);
+  text-transform: uppercase;
+  letter-spacing: 3px;
+  margin-bottom: var(--spacing-xs);
+  text-shadow: 0 0 20px rgba(0, 212, 170, 0.5);
+}
+
+.tagline {
+  color: var(--text-muted);
+  font-size: var(--text-base);
+  margin: 0;
+}
+
+/* ================================================================ */
+/* SECTIONS */
+/* ================================================================ */
+
+.week-navigation,
+.stats-section,
+.day-tabs,
+.workout-section {
+  margin-bottom: var(--spacing-xl);
+}
+
+/* ================================================================ */
+/* WEEK NAVIGATION */
+/* ================================================================ */
+
+.week-navigation {
+  background: var(--bg-card);
+  padding: var(--spacing-lg);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-lg);
+  border: 1px solid rgba(0, 212, 170, 0.2);
+}
+
+.week-controls {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: var(--spacing-md);
+  flex-wrap: wrap;
+}
+
+@media (max-width: 768px) {
+  .week-controls {
+    flex-direction: column;
+  }
+}
+
+.week-info {
+  flex: 1;
+  text-align: center;
+}
+
+.week-info h1 {
+  font-size: var(--text-2xl);
+  margin-bottom: var(--spacing-sm);
+  color: var(--primary-color);
+}
+
+.week-meta {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: var(--spacing-sm);
+  margin-bottom: var(--spacing-sm);
+}
+
+.block-name {
+  color: var(--text-muted);
+  font-size: var(--text-lg);
+  font-weight: 600;
+}
+
+/* ================================================================ */
+/* DAY TABS */
+/* ================================================================ */
+
+.day-tabs {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: var(--spacing-md);
+}
+
+@media (max-width: 768px) {
+  .day-tabs {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+/* ================================================================ */
+/* WORKOUT SECTION */
+/* ================================================================ */
+
+.workout-header {
+  background: linear-gradient(135deg, var(--bg-card) 0%, rgba(30, 30, 63, 0.8) 100%);
+  padding: var(--spacing-xl);
+  border-radius: var(--radius-lg);
+  margin-bottom: var(--spacing-xl);
+  box-shadow: var(--shadow-lg);
+  border: 2px solid rgba(0, 212, 170, 0.3);
+}
+
+.workout-header h2 {
+  font-size: var(--text-2xl);
+  margin-bottom: var(--spacing-md);
+  color: var(--primary-color);
+  text-transform: uppercase;
+  letter-spacing: 2px;
+}
+
+.workout-meta {
+  display: flex;
+  gap: var(--spacing-xl);
+  flex-wrap: wrap;
+  align-items: center;
+}
+
+.meta-item {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-xs);
+}
+
+.meta-item strong {
+  font-size: var(--text-xl);
+  color: var(--primary-color);
+}
+
+/* ================================================================ */
+/* EXERCISES LIST */
+/* ================================================================ */
+
+.exercises-list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-xl);
+}
+
+/* ================================================================ */
+/* STATS GRID */
+/* ================================================================ */
+
+.stats-section {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: var(--spacing-md);
+}
+
+@media (max-width: 768px) {
+  .stats-section {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+/* ================================================================ */
+/* TIMER FIXE */
+/* ================================================================ */
+
+.timer-fixed {
+  position: fixed;
+  top: 120px;
+  right: 20px;
+  z-index: 9999;
+}
+
+@media (max-width: 768px) {
+  .timer-fixed {
+    top: 80px;
+    right: 10px;
+  }
+}
+
+/* ================================================================ */
+/* GRIDS UTILITAIRES */
+/* ================================================================ */
+
+.meta-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+  gap: var(--spacing-md);
+}
+
+@media (max-width: 768px) {
+  .meta-grid {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+/* ================================================================ */
+/* ERROR MESSAGE */
+/* ================================================================ */
+
+.error-message {
+  background: rgba(255, 68, 68, 0.1);
+  border: 2px solid var(--danger-color);
+  border-radius: var(--radius-md);
+  padding: var(--spacing-xl);
+  text-align: center;
+  margin: var(--spacing-xl) 0;
+}
+
+.error-message h3 {
+  color: var(--danger-color);
+  margin-bottom: var(--spacing-sm);
+}
