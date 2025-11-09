@@ -1,11 +1,12 @@
 // ====================================================================
-// HYBRID MASTER 51 - PROGRAMME COMPLET DÉFINITIF (CORRIGÉ)
+// HYBRID MASTER 51 - PROGRAMME COMPLET DÉFINITIF CORRIGÉ
 // ====================================================================
-// Version : 1.0 Finale
+// Version : 2.0 FINALE COMPLÈTE
 // Date : Novembre 2025
 // Durée : 26 semaines
-// Fréquence : 3 séances/semaine (Dimanche, Mardi, Vendredi)
-// Objectif : +4.5-5.5 kg masse maigre, progression force optimale
+// Fréquence : 3 séances/semaine (Dimanche, Mardi, Vendredi) + 2 maison
+// Structure : 4 blocs + 2 tapers
+// Deloads : S6, S12, S18, S24, S26
 // ====================================================================
 
 // HELPER : Calculer progression de poids
@@ -76,8 +77,9 @@ function generateProgram() {
             weight: calculateWeight(75, week, 5, 3),
             rest: 120,
             tempo: isDeload ? "4-1-2" : (week <= 5 ? "3-1-2" : "2-1-2"),
-            notes: blockInfo.block === 4 && !isDeload ? "Myo-reps S3 : 15 reps → 5s → 5 mini-sets × 5 reps" :
-                   "Coudes fléchis, monter horizontal (haltère)"
+            notes: blockInfo.block === 2 && !isDeload ? "Rest-Pause S5 : 6-8 reps → 20s → 2-3 reps" :
+                   blockInfo.block === 4 && !isDeload ? "Clusters S5 : 3 reps → 20s → 2 reps → 20s → 2 reps (7 total)" :
+                   "Mouvement roi dos/jambes, barre hexagonale"
           },
           {
             id: `w${week}_dim_2`,
@@ -90,8 +92,8 @@ function generateProgram() {
             weight: calculateWeight(25, week, 2.5, 2),
             rest: 75,
             tempo: isDeload ? "4-1-2" : (week <= 5 ? "3-1-2" : "2-1-2"),
-            notes: blockInfo.block === 3 && !isDeload ? "Drop-set série 4 : 10 reps → -25% → 8-10 reps" :
-                   blockInfo.block === 4 && !isDeload ? "Partials série 4 : 10 reps → 5 demi-reps amplitude haute" :
+            notes: blockInfo.block === 3 && !isDeload ? "Drop-set S4 : 10 reps → -25% → 8-10 reps" :
+                   blockInfo.block === 4 && !isDeload ? "Partials S4 : 10 reps → 5 demi-reps amplitude haute" :
                    "Haltère tenu devant poitrine, descente contrôlée"
           },
           {
@@ -105,7 +107,7 @@ function generateProgram() {
             weight: calculateWeight(110, week, 10, 2),
             rest: 75,
             tempo: isDeload ? "4-1-2" : (week <= 5 ? "3-1-2" : "2-1-2"),
-            notes: blockInfo.block === 3 && !isDeload ? "Drop-set série 4 : 10 reps → -25% → 10-12 reps" :
+            notes: blockInfo.block === 3 && !isDeload ? "Drop-set S4 : 10 reps → -25% → 10-12 reps" :
                    blockInfo.block === 4 && !isDeload ? "Clusters S4 : 4 reps → 20s → 3 reps → 20s → 3 reps | Puis 10 reps → 8 quarts reps" :
                    "Pieds largeur épaules, amplitude complète"
           },
@@ -465,9 +467,7 @@ function generateProgram() {
             weight: calculateWeight(8, week, 2.5, 4),
             rest: 60,
             tempo: isDeload ? "4-1-2" : (week <= 5 ? "3-1-2" : "2-1-2"),
-            notes: blockInfo.block === 2 && !isDeload ? "Rest-Pause série 5 : 6-8 reps → 20s repos → 2-3 reps" : 
-                   blockInfo.block === 4 && !isDeload ? "Clusters série 5 : 3 reps → 20s → 2 reps → 20s → 2 reps" : 
-                   "Exercice roi, technique parfaite obligatoire"
+            notes: "Exercice clé deltoïdes, technique parfaite obligatoire"
           },
           {
             id: `w${week}_ven_6`,
@@ -525,7 +525,7 @@ export const PROGRAM = generateProgram();
 // ====================================================================
 export const PROGRAM_INFO = {
   name: "Hybrid Master 51",
-  version: "1.0 Définitive",
+  version: "2.0 Complète Corrigée",
   duration: 26,
   weeksPerBlock: {
     block1: [1, 2, 3, 4, 5],
@@ -706,7 +706,7 @@ export const PROGRAM_INFO = {
 };
 
 // ====================================================================
-// CLASSE PROGRAMDATA (API)
+// CLASSE PROGRAMDATA (API COMPLÈTE)
 // ====================================================================
 export class ProgramData {
   constructor() {
@@ -736,7 +736,6 @@ export class ProgramData {
     return workout.exercises;
   }
 
-  // ✅ sets toujours transformé en tableau
   getExerciseProgression(exerciseName) {
     const progression = [];
     for (let week = 1; week <= 26; week++) {
@@ -745,26 +744,15 @@ export class ProgramData {
         const workout = weekData[day];
         const exercise = workout.exercises.find(ex => ex.name === exerciseName);
         if (exercise) {
-          let setsData;
-          if (Array.isArray(exercise.sets)) {
-            setsData = exercise.sets;
-          } else if (typeof exercise.sets === "number") {
-            setsData = Array.from({ length: exercise.sets }, () => ({
-              reps: exercise.reps,
-              weight: exercise.weight,
-              rest: exercise.rest
-            }));
-          } else if (typeof exercise.sets === "object") {
-            setsData = [exercise.sets];
-          }
           progression.push({
             week,
             day,
             weight: exercise.weight,
-            sets: setsData,
+            sets: exercise.sets,
             reps: exercise.reps,
             technique: weekData.technique,
-            isDeload: weekData.isDeload
+            isDeload: weekData.isDeload,
+            notes: exercise.notes
           });
         }
       });
@@ -785,7 +773,6 @@ export class ProgramData {
     return Array.from(exercisesSet).sort();
   }
 
-  // ✅ sets toujours compté correctement
   getWeekVolume(weekNumber) {
     const week = this.getWeek(weekNumber);
     let totalSets = 0;
@@ -793,14 +780,7 @@ export class ProgramData {
     let totalWeight = 0;
     ['dimanche', 'mardi', 'vendredi', 'maison'].forEach(day => {
       week[day].exercises.forEach(ex => {
-        let setsCount = 0;
-        if (Array.isArray(ex.sets)) {
-          setsCount = ex.sets.length;
-        } else if (typeof ex.sets === "number") {
-          setsCount = ex.sets;
-        } else if (typeof ex.sets === "object") {
-          setsCount = 1;
-        }
+        const setsCount = typeof ex.sets === 'number' ? ex.sets : 1;
         totalSets += setsCount;
         const repsNum = typeof ex.reps === 'string' ? parseInt(ex.reps.split('-')[0]) : ex.reps;
         totalReps += setsCount * repsNum;
@@ -835,6 +815,32 @@ export class ProgramData {
   getTechnique(weekNumber) {
     const week = this.getWeek(weekNumber);
     return week.technique;
+  }
+
+  getSupersetsForDay(weekNumber, day) {
+    const workout = this.getWorkout(weekNumber, day);
+    const supersets = [];
+    const exercises = workout.exercises;
+    
+    for (let i = 0; i < exercises.length; i++) {
+      if (exercises[i].isSuperset) {
+        const partner = exercises.find(ex => 
+          ex.supersetWith === exercises[i].name || 
+          exercises[i].supersetWith === ex.name
+        );
+        if (partner) {
+          supersets.push({
+            exercise1: exercises[i],
+            exercise2: partner
+          });
+        }
+      }
+    }
+    return supersets;
+  }
+
+  getBicepExerciseForWeek(weekNumber) {
+    return getBicepExercise(weekNumber);
   }
 
   exportToJSON() {
@@ -884,9 +890,112 @@ export class ProgramData {
       totalExercises: this.getAllExercises().length
     };
   }
+
+  // Méthodes utilitaires supplémentaires
+  getProgressionSummary() {
+    const summary = {};
+    const allExercises = this.getAllExercises();
+    
+    allExercises.forEach(exerciseName => {
+      const progression = this.getExerciseProgression(exerciseName);
+      if (progression.length > 0) {
+        const first = progression[0];
+        const last = progression[progression.length - 1];
+        summary[exerciseName] = {
+          startWeight: first.weight,
+          endWeight: last.weight,
+          totalGain: last.weight - first.weight,
+          percentageIncrease: ((last.weight - first.weight) / first.weight * 100).toFixed(1) + '%'
+        };
+      }
+    });
+    
+    return summary;
+  }
+
+  getWeekSummary(weekNumber) {
+    const week = this.getWeek(weekNumber);
+    const volume = this.getWeekVolume(weekNumber);
+    
+    return {
+      weekNumber,
+      block: week.block,
+      technique: week.technique,
+      isDeload: week.isDeload,
+      rpeTarget: week.rpeTarget,
+      totalSets: volume.totalSets,
+      totalReps: volume.totalReps,
+      totalWeight: volume.totalWeight,
+      workouts: {
+        dimanche: {
+          name: week.dimanche.name,
+          duration: week.dimanche.duration,
+          exercises: week.dimanche.exercises.length
+        },
+        mardi: {
+          name: week.mardi.name,
+          duration: week.mardi.duration,
+          exercises: week.mardi.exercises.length
+        },
+        vendredi: {
+          name: week.vendredi.name,
+          duration: week.vendredi.duration,
+          exercises: week.vendredi.exercises.length
+        },
+        maison: {
+          name: week.maison.name,
+          duration: week.maison.duration,
+          exercises: week.maison.exercises.length
+        }
+      }
+    };
+  }
 }
 
 // ====================================================================
 // EXPORT PAR DÉFAUT
 // ====================================================================
 export default new ProgramData();
+
+// ====================================================================
+// EXEMPLE D'UTILISATION
+// ====================================================================
+/*
+import programData from './hybrid_master_51.js';
+
+// Récupérer une semaine complète
+const week1 = programData.getWeek(1);
+console.log(week1);
+
+// Récupérer un workout spécifique
+const dimanche1 = programData.getWorkout(1, 'dimanche');
+console.log(dimanche1);
+
+// Récupérer progression d'un exercice
+const trapBarProgression = programData.getExerciseProgression('Trap Bar Deadlift');
+console.log(trapBarProgression);
+
+// Tous les exercices
+const allExercises = programData.getAllExercises();
+console.log(allExercises);
+
+// Volume d'une semaine
+const volume = programData.getWeekVolume(1);
+console.log(volume);
+
+// Valider le programme
+const validation = programData.validateProgram();
+console.log(validation);
+
+// Résumé progression
+const summary = programData.getProgressionSummary();
+console.log(summary);
+
+// Résumé d'une semaine
+const weekSummary = programData.getWeekSummary(1);
+console.log(weekSummary);
+
+// Export JSON
+const json = programData.exportToJSON();
+console.log(json);
+*/
