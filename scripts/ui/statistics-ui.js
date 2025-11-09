@@ -20,16 +20,63 @@ export class StatisticsUI {
 
     this.container.innerHTML = `
       <h2>📊 Statistiques</h2>
+      <section id="summary-global" class="weekly-summary"></section>
       <section id="heatmap"></section>
       <section id="radar"></section>
       <section id="pie"></section>
       <section id="top-exercises"></section>
     `;
 
+    this.renderSummaryGlobal();
     this.renderHeatmap();
     this.renderRadar();
     this.renderPie();
     this.renderTopExercises();
+  }
+
+  // ==================== RÉSUMÉ GLOBAL ====================
+  renderSummaryGlobal() {
+    const section = this.container.querySelector("#summary-global");
+
+    const volumeTotal = this.engine.calculateTotalVolume();
+    const volumeMoyen = this.engine.calculateAverageWeeklyVolume();
+    const totalSessions = this.engine.calculateTotalSessions();
+    const completionRate = this.engine.getCompletionRate();
+    const avgDuration = this.engine.getAverageSessionDuration();
+    const growthRate = this.engine.getVolumeGrowthRate();
+
+    section.innerHTML = `
+      <div class="summary-card">
+        <div class="summary-icon">🏋️</div>
+        <div class="summary-value">${this.engine.formatVolume(volumeTotal)}</div>
+        <div class="summary-label">Volume total</div>
+      </div>
+      <div class="summary-card">
+        <div class="summary-icon">📈</div>
+        <div class="summary-value">${this.engine.formatVolume(volumeMoyen)}</div>
+        <div class="summary-label">Volume hebdo moyen</div>
+      </div>
+      <div class="summary-card">
+        <div class="summary-icon">✅</div>
+        <div class="summary-value">${totalSessions}</div>
+        <div class="summary-label">Séances totales</div>
+      </div>
+      <div class="summary-card">
+        <div class="summary-icon">🔥</div>
+        <div class="summary-value">${completionRate}%</div>
+        <div class="summary-label">Taux de complétion</div>
+      </div>
+      <div class="summary-card">
+        <div class="summary-icon">⏱️</div>
+        <div class="summary-value">${avgDuration} min</div>
+        <div class="summary-label">Durée moyenne</div>
+      </div>
+      <div class="summary-card">
+        <div class="summary-icon">📊</div>
+        <div class="summary-value">${growthRate}%</div>
+        <div class="summary-label">Croissance du volume</div>
+      </div>
+    `;
   }
 
   // ==================== HEATMAP ====================
