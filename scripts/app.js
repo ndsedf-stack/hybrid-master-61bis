@@ -1,6 +1,7 @@
 import ProgramData from './program-data.js';
 import WorkoutRenderer from './ui/workout-renderer.js';
 import TimerManager from './modules/timer-manager.js';
+import { StatisticsUI } from './ui/statistics-ui.js'; // 📊 Nouveau import
 
 class App {
   constructor() {
@@ -8,6 +9,7 @@ class App {
     this.timer = new TimerManager();
     this.weekNumber = 1;
     this.dayName = 'dimanche';
+    this.statisticsUI = null; // 📊 Nouveau
   }
 
   async init() {
@@ -15,7 +17,16 @@ class App {
     this.renderer.init();
     this.timer.init();
     this.renderer.timerManager = this.timer;
+
+    // Rendu par défaut : workout
     this.renderWorkout();
+
+    // Initialisation statistiques
+    const statsRoot = document.getElementById('statsRoot');
+    if (statsRoot) {
+      this.statisticsUI = new StatisticsUI('statsRoot', []); // sessions = [] pour l’instant
+    }
+
     this.attachEvents();
     console.log('✅ Application prête !');
   }
@@ -47,6 +58,23 @@ class App {
       }
     });
 
+    // 📊 Bouton Stats
+    document.getElementById('nav-stats')?.addEventListener('click', () => {
+      const workoutContainer = document.getElementById('workout-container');
+      const statsRoot = document.getElementById('statsRoot');
+      if (workoutContainer && statsRoot) {
+        const isStatsVisible = !statsRoot.classList.contains('hidden');
+        if (isStatsVisible) {
+          statsRoot.classList.add('hidden');
+          workoutContainer.classList.remove('hidden');
+        } else {
+          workoutContainer.classList.add('hidden');
+          statsRoot.classList.remove('hidden');
+        }
+      }
+    });
+
+    // ✅ Validation séries
     document.addEventListener('click', (e) => {
       const btn = e.target.closest('.serie-check');
       if (!btn) return;
