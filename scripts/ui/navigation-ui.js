@@ -13,6 +13,11 @@ export class NavigationUI {
         this.prevWeekBtn = document.getElementById('prev-week');
         this.nextWeekBtn = document.getElementById('next-week');
         this.dayTabs = document.querySelectorAll('.day-tab');
+
+        // 📊 Nouveaux éléments pour les statistiques
+        this.workoutContainer = document.getElementById('workout-container');
+        this.statsContainer = document.getElementById('statsRoot');
+        this.statsBtn = document.getElementById('nav-stats');
         
         this.onWeekChange = null;
         this.onDayChange = null;
@@ -37,6 +42,11 @@ export class NavigationUI {
                 this.selectDay(day);
             });
         });
+
+        // 📊 Bouton Stats
+        if (this.statsBtn) {
+            this.statsBtn.addEventListener('click', () => this.toggleStats());
+        }
 
         // Raccourcis clavier
         document.addEventListener('keydown', (e) => {
@@ -100,6 +110,23 @@ export class NavigationUI {
 
         if (this.onDayChange) {
             this.onDayChange(this.currentWeek, this.currentDay);
+        }
+    }
+
+    /**
+     * 📊 Bascule entre Workout et Statistiques
+     */
+    toggleStats() {
+        if (!this.workoutContainer || !this.statsContainer) return;
+
+        const isStatsVisible = !this.statsContainer.classList.contains('hidden');
+
+        if (isStatsVisible) {
+            this.statsContainer.classList.add('hidden');
+            this.workoutContainer.classList.remove('hidden');
+        } else {
+            this.workoutContainer.classList.add('hidden');
+            this.statsContainer.classList.remove('hidden');
         }
     }
 
