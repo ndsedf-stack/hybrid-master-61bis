@@ -22,16 +22,24 @@
     <h1>💪 Hybrid Master 61</h1>
     <div class="header-actions"></div>
   </header>
+
   <!-- Main Container -->
   <main class="app-container container main-content">
+    <!-- Workout view -->
     <div id="workout-container" aria-live="polite" aria-busy="false"></div>
+
+    <!-- Stats view -->
+    <div id="statsRoot" class="hidden" aria-live="polite" aria-busy="false"></div>
+
     <!-- Bottom navigation -->
     <nav class="bottom-nav">
       <button class="btn" id="nav-prev-week" aria-label="Semaine précédente">←</button>
       <span id="current-week-label">Semaine 1</span>
       <button class="btn" id="nav-next-week" aria-label="Semaine suivante">→</button>
+      <button class="btn" id="nav-stats" aria-label="Voir les statistiques">📊 Stats</button>
     </nav>
   </main>
+
   <!-- Timer Widget -->
   <div id="timer-widget" aria-hidden="true">
     <div class="timer-header">
@@ -58,7 +66,9 @@
       <button id="timer-skip">Skip</button>
     </div>
   </div>
+
   <!-- JavaScript -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script> <!-- 📊 Chart.js -->
   <script type="module" src="scripts/app.js"></script>
   <script type="module" src="scripts/ui/theme-switcher.js"></script> <!-- ✨ NOUVEAU -->
 </body>
