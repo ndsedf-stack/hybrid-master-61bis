@@ -253,3 +253,4 @@ export class LocalStorage {
         return `${(bytes / 1024).toFixed(2)} Ko`;
     }
 }
+window.LocalStorage = LocalStorage
