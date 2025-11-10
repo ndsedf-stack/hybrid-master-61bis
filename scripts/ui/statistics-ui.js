@@ -202,18 +202,17 @@ export class StatisticsUI {
     });
   }
 
-  renderTopExercises() {
+    renderTopExercises() {
     const list = this.engine.getTopExercises();
     const ul = this.container.querySelector(".top-exercises");
     if (!list || !list.length || !ul) return;
 
     ul.innerHTML = "";
-          list.forEach(ex => {
-        const li = document.createElement("li");
-        li.textContent = `${ex.name} (${ex.count})`;
-        ul.appendChild(li);
-      });
-    }
+    list.forEach(ex => {
+      const li = document.createElement("li");
+      li.textContent = `${ex.name} (${ex.count})`;
+      ul.appendChild(li);
+    });
   }
 
   // ==================== RECORDS PERSONNELS ====================
