@@ -20,14 +20,38 @@ h2, h3 {
   box-shadow: 0 0 0 1px #1e2733;
 }
 
-.chart-wrap {
-  position: relative;
-  width: 100%;
-  max-width: 500px;
+/* === Graphiques === */
+
+/* Progression (line chart) → plus large */
+#progression-8weeks .chart-wrap {
+  max-width: 600px;
+  height: 280px;
   margin: 0 auto;
-  height: 300px;
 }
 
+/* Radar → plus petit */
+#radar .chart-wrap {
+  max-width: 320px;
+  height: 220px;
+  margin: 0 auto;
+}
+
+/* Donut (pie chart) → taille moyenne */
+#pie .chart-wrap {
+  max-width: 380px;
+  height: 240px;
+  margin: 0 auto;
+}
+
+/* Heatmap → occupe toute la largeur */
+#heatmap .heatmap-grid {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 0.5rem;
+  margin-top: 1rem;
+}
+
+/* === Légendes === */
 .legend {
   display: flex;
   gap: 1rem;
@@ -53,7 +77,6 @@ h2, h3 {
 }
 
 /* === Résumé global === */
-
 .weekly-summary {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
@@ -85,14 +108,6 @@ h2, h3 {
 }
 
 /* === Heatmap === */
-
-.heatmap-grid {
-  display: grid;
-  grid-template-columns: repeat(7, 1fr);
-  gap: 0.5rem;
-  margin-top: 1rem;
-}
-
 .day {
   background-color: #1e2733;
   padding: 0.8rem;
@@ -109,7 +124,6 @@ h2, h3 {
 }
 
 /* === Top exercices === */
-
 .top-exercises {
   list-style: none;
   padding: 0;
@@ -126,7 +140,6 @@ h2, h3 {
 }
 
 /* === Records personnels === */
-
 .records-list {
   list-style: none;
   padding: 0;
@@ -160,13 +173,8 @@ h2, h3 {
 }
 
 /* === Responsive === */
-
 @media screen and (max-width: 600px) {
-  .chart-wrap {
-    height: 240px;
-  }
-
-  .weekly-summary {
-    grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
-  }
+  #progression-8weeks .chart-wrap { height: 220px; }
+  #radar .chart-wrap { height: 180px; }
+  #pie .chart-wrap { height: 200px; }
 }
