@@ -219,11 +219,14 @@ export class StatisticsUI {
   renderRecords() {
     const records = this.engine.getPersonalRecords();
     const ul = this.container.querySelector(".records-list");
+
+    // Si aucun record
     if (!records || !records.length || !ul) {
       ul.innerHTML = "<li class='empty'>Aucun record enregistré</li>";
       return;
     }
 
+    // Sinon on affiche les records
     ul.innerHTML = "";
     records.forEach(rec => {
       const li = document.createElement("li");
