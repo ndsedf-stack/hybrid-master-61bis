@@ -1,95 +1,32 @@
-/* ============================================================================
-   SECTION CARDS
-   ============================================================================ */
+/* === STATISTICS DASHBOARD === */
+
+#statsRoot {
+  padding: 2rem;
+  color: #e8edf2;
+  background-color: #0c1218;
+  font-family: 'Segoe UI', sans-serif;
+}
+
+h2, h3 {
+  margin-bottom: 1rem;
+  color: #ffffff;
+}
 
 .section-card {
-  background: var(--bg-secondary);
-  border: 1px solid var(--border-color);
+  background-color: #131b24;
   border-radius: 12px;
   padding: 1.5rem;
-  box-shadow: 0 6px 18px rgba(0,0,0,0.25);
-  margin-top: 2rem;
+  margin-bottom: 2rem;
+  box-shadow: 0 0 0 1px #1e2733;
 }
-
-.section-card h3 {
-  font-size: 1.2rem;
-  font-weight: 600;
-  color: var(--text-primary);
-  margin-bottom: 1rem;
-}
-
-/* ============================================================================
-   CHART WRAPPER
-   ============================================================================ */
 
 .chart-wrap {
   position: relative;
   width: 100%;
-  height: 380px;
+  max-width: 500px;
+  margin: 0 auto;
+  height: 300px;
 }
-
-@media (max-width: 600px) {
-  .chart-wrap {
-    height: 320px;
-  }
-}
-
-/* ============================================================================
-   WEEKLY SUMMARY
-   ============================================================================ */
-
-.weekly-summary {
-  display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 1rem;
-  margin-top: 2rem;
-}
-
-@media (max-width: 900px) {
-  .weekly-summary {
-    grid-template-columns: repeat(2, 1fr);
-  }
-}
-
-@media (max-width: 600px) {
-  .weekly-summary {
-    grid-template-columns: 1fr;
-  }
-}
-
-.summary-card {
-  background: var(--bg-secondary);
-  border: 1px solid var(--border-color);
-  border-radius: 12px;
-  padding: 1rem;
-  display: grid;
-  grid-template-columns: 44px 1fr;
-  align-items: center;
-  gap: 12px;
-  box-shadow: 0 6px 18px rgba(0,0,0,0.25);
-}
-
-.summary-icon {
-  font-size: 1.5rem;
-  color: var(--accent-color);
-}
-
-.summary-value {
-  font-weight: 700;
-  font-size: 1.2rem;
-  color: var(--text-primary);
-}
-
-.summary-label {
-  font-size: 0.75rem;
-  color: var(--text-secondary);
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
-}
-
-/* ============================================================================
-   LEGEND PILLS
-   ============================================================================ */
 
 .legend {
   display: flex;
@@ -99,78 +36,137 @@
 }
 
 .legend-pill {
-  display: inline-flex;
+  display: flex;
   align-items: center;
-  gap: 8px;
-  background: var(--bg-card);
-  border: 1px solid var(--border-color);
-  color: var(--text-secondary);
-  padding: 6px 10px;
-  border-radius: 999px;
-  font-size: 0.75rem;
+  gap: 0.5rem;
+  font-size: 0.9rem;
+  background-color: #1e2733;
+  padding: 0.4rem 0.8rem;
+  border-radius: 20px;
 }
 
 .legend-pill .dot {
   width: 10px;
   height: 10px;
   border-radius: 50%;
+  display: inline-block;
 }
 
-/* ============================================================================
-   HEATMAP GRID
-   ============================================================================ */
+/* === Résumé global === */
+
+.weekly-summary {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+  gap: 1rem;
+}
+
+.summary-card {
+  background-color: #1e2733;
+  border-radius: 10px;
+  padding: 1rem;
+  text-align: center;
+  box-shadow: 0 0 0 1px #2a3542;
+}
+
+.summary-icon {
+  font-size: 1.5rem;
+  margin-bottom: 0.5rem;
+}
+
+.summary-value {
+  font-size: 1.4rem;
+  font-weight: bold;
+  color: #00d4aa;
+}
+
+.summary-label {
+  font-size: 0.85rem;
+  color: #9aa7b2;
+}
+
+/* === Heatmap === */
 
 .heatmap-grid {
   display: grid;
   grid-template-columns: repeat(7, 1fr);
-  gap: 8px;
+  gap: 0.5rem;
   margin-top: 1rem;
 }
 
-.heatmap-grid .day {
-  background: var(--bg-card);
-  border: 1px solid var(--border-color);
-  border-radius: 10px;
-  padding: 10px;
+.day {
+  background-color: #1e2733;
+  padding: 0.8rem;
   text-align: center;
-  color: var(--text-secondary);
-  font-size: 0.75rem;
+  border-radius: 6px;
+  font-size: 0.85rem;
+  color: #9aa7b2;
 }
 
-.heatmap-grid .day.active {
-  background: var(--accent-color);
+.day.active {
+  background-color: #00d4aa;
   color: #fff;
+  font-weight: bold;
 }
 
-/* ============================================================================
-   TOP EXERCISES
-   ============================================================================ */
+/* === Top exercices === */
 
 .top-exercises {
-  display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 10px;
-  margin-top: 1rem;
-  padding: 0;
   list-style: none;
+  padding: 0;
+  margin-top: 1rem;
 }
 
 .top-exercises li {
-  background: var(--bg-card);
-  border: 1px solid var(--border-color);
-  border-radius: 10px;
-  padding: 10px;
-  color: var(--text-primary);
-  font-size: 0.85rem;
+  background-color: #1e2733;
+  padding: 0.8rem 1rem;
+  margin-bottom: 0.5rem;
+  border-radius: 8px;
+  font-size: 0.95rem;
+  color: #e8edf2;
 }
 
-/* ============================================================================
-   EMPTY MESSAGE
-   ============================================================================ */
+/* === Records personnels === */
 
-.empty {
-  font-size: 0.85rem;
-  color: var(--text-secondary);
+.records-list {
+  list-style: none;
+  padding: 0;
   margin-top: 1rem;
+}
+
+.records-list li {
+  background-color: #1e2733;
+  padding: 1rem;
+  margin-bottom: 0.8rem;
+  border-radius: 10px;
+  font-size: 0.9rem;
+  color: #e8edf2;
+}
+
+.record-line {
+  display: block;
+  margin-top: 0.3rem;
+  color: #9aa7b2;
+}
+
+.records-list li strong {
+  font-size: 1rem;
+  color: #00d4aa;
+}
+
+.records-list .empty {
   text-align: center;
+  color: #9aa7b2;
+  font-style: italic;
+}
+
+/* === Responsive === */
+
+@media screen and (max-width: 600px) {
+  .chart-wrap {
+    height: 240px;
+  }
+
+  .weekly-summary {
+    grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+  }
 }
