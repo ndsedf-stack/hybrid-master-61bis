@@ -8,9 +8,6 @@ export class LocalStorage {
         this.available = this.checkAvailability();
     }
 
-    /**
-     * Vérifie la disponibilité de localStorage
-     */
     checkAvailability() {
         try {
             const test = '__storage_test__';
@@ -23,19 +20,11 @@ export class LocalStorage {
         }
     }
 
-    /**
-     * Sauvegarde une valeur
-     */
     save(key, value) {
-        if (!this.available) {
-            console.warn('⚠️ Impossible de sauvegarder, localStorage non disponible');
-            return false;
-        }
-
+        if (!this.available) return false;
         try {
             const fullKey = this.prefix + key;
-            const jsonValue = JSON.stringify(value);
-            localStorage.setItem(fullKey, jsonValue);
+            localStorage.setItem(fullKey, JSON.stringify(value));
             return true;
         } catch (e) {
             console.error('❌ Erreur lors de la sauvegarde:', e);
@@ -43,38 +32,22 @@ export class LocalStorage {
         }
     }
 
-    /**
-     * Récupère une valeur
-     */
     load(key, defaultValue = null) {
-        if (!this.available) {
-            return defaultValue;
-        }
-
+        if (!this.available) return defaultValue;
         try {
             const fullKey = this.prefix + key;
             const jsonValue = localStorage.getItem(fullKey);
-            
-            if (jsonValue === null) {
-                return defaultValue;
-            }
-
-            return JSON.parse(jsonValue);
+            return jsonValue ? JSON.parse(jsonValue) : defaultValue;
         } catch (e) {
             console.error('❌ Erreur lors du chargement:', e);
             return defaultValue;
         }
     }
 
-    /**
-     * Supprime une valeur
-     */
     remove(key) {
         if (!this.available) return false;
-
         try {
-            const fullKey = this.prefix + key;
-            localStorage.removeItem(fullKey);
+            localStorage.removeItem(this.prefix + key);
             return true;
         } catch (e) {
             console.error('❌ Erreur lors de la suppression:', e);
@@ -82,18 +55,11 @@ export class LocalStorage {
         }
     }
 
-    /**
-     * Efface toutes les données de l'app
-     */
     clear() {
         if (!this.available) return false;
-
         try {
-            const keys = Object.keys(localStorage);
-            keys.forEach(key => {
-                if (key.startsWith(this.prefix)) {
-                    localStorage.removeItem(key);
-                }
+            Object.keys(localStorage).forEach(key => {
+                if (key.startsWith(this.prefix)) localStorage.removeItem(key);
             });
             console.log('🗑️ Données effacées');
             return true;
@@ -104,9 +70,6 @@ export class LocalStorage {
     }
 
     // ==================== DONNÉES DE TEST ====================
-    /**
-     * Injecte des données fictives pour tester le dashboard
-     */
     saveFakeHistory() {
         const fakeHistory = {};
         for (let week = 24; week <= 26; week++) {
@@ -148,62 +111,45 @@ export class LocalStorage {
     saveNavigationState(week, day) {
         return this.save('navigation', { week, day });
     }
-
     loadNavigationState() {
         return this.load('navigation', { week: 1, day: 'dimanche' });
     }
 
     // ==================== PROGRESSION EXERCICES ====================
     saveExerciseProgress(week, day, exerciseId, data) {
-        const key = `progress_w${week}_${day}_${exerciseId}`;
-        return this.save(key, data);
+        return this.save(`progress_w${week}_${day}_${exerciseId}`, data);
     }
-
     loadExerciseProgress(week, day, exerciseId) {
-        const key = `progress_w${week}_${day}_${exerciseId}`;
-        return this.load(key, null);
+        return this.load(`progress_w${week}_${day}_${exerciseId}`, null);
     }
-
     saveCompletedSets(week, day, exerciseId, completedSets) {
         return this.saveExerciseProgress(week, day, exerciseId, {
             completedSets,
             lastUpdate: new Date().toISOString()
         });
     }
-
     loadCompletedSets(week, day, exerciseId) {
         const data = this.loadExerciseProgress(week, day, exerciseId);
         return data ? data.completedSets : [];
     }
-
     saveCustomWeights(week, day, exerciseId, weights) {
-        const key = `weights_w${week}_${day}_${exerciseId}`;
-        return this.save(key, {
+        return this.save(`weights_w${week}_${day}_${exerciseId}`, {
             weights,
             lastUpdate: new Date().toISOString()
         });
     }
-
     loadCustomWeights(week, day, exerciseId) {
-        const key = `weights_w${week}_${day}_${exerciseId}`;
-        const data = this.load(key, null);
+        const data = this.load(`weights_w${week}_${day}_${exerciseId}`, null);
         return data ? data.weights : null;
     }
 
     // ==================== TIMER ====================
     saveTimerState(seconds, isRunning) {
-        return this.save('timer', {
-            seconds,
-            isRunning,
-            timestamp: Date.now()
-        });
+        return this.save('timer', { seconds, isRunning, timestamp: Date.now() });
     }
-
     loadTimerState() {
         const data = this.load('timer', null);
-        if (data && (Date.now() - data.timestamp) > 3600000) {
-            return null;
-        }
+        if (data && (Date.now() - data.timestamp) > 3600000) return null;
         return data;
     }
 
@@ -211,22 +157,18 @@ export class LocalStorage {
     exportAll() {
         if (!this.available) return null;
         const data = {};
-        const keys = Object.keys(localStorage);
-        keys.forEach(key => {
+        Object.keys(localStorage).forEach(key => {
             if (key.startsWith(this.prefix)) {
-                const shortKey = key.replace(this.prefix, '');
-                data[shortKey] = localStorage.getItem(key);
+                data[key.replace(this.prefix, '')] = localStorage.getItem(key);
             }
         });
         return data;
     }
-
     importAll(data) {
         if (!this.available || !data) return false;
         try {
             Object.keys(data).forEach(key => {
-                const fullKey = this.prefix + key;
-                localStorage.setItem(fullKey, data[key]);
+                localStorage.setItem(this.prefix + key, data[key]);
             });
             console.log('✅ Données importées');
             return true;
@@ -235,22 +177,18 @@ export class LocalStorage {
             return false;
         }
     }
-
     getStorageSize() {
         if (!this.available) return 0;
         let size = 0;
-        const keys = Object.keys(localStorage);
-        keys.forEach(key => {
-            if (key.startsWith(this.prefix)) {
-                size += localStorage.getItem(key).length;
-            }
+        Object.keys(localStorage).forEach(key => {
+            if (key.startsWith(this.prefix)) size += localStorage.getItem(key).length;
         });
         return size;
     }
-
     getStorageSizeFormatted() {
-        const bytes = this.getStorageSize();
-        return `${(bytes / 1024).toFixed(2)} Ko`;
+        return `${(this.getStorageSize() / 1024).toFixed(2)} Ko`;
     }
 }
-window.LocalStorage = LocalStorage
+
+// ✅ Expose la classe en global pour la console
+window.LocalStorage = LocalStorage;
