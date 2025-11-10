@@ -18,9 +18,9 @@ class StatisticsEngine {
     const history = {};
     for (let week = 1; week <= 26; week++) {
       history[`week_${week}`] = {
-        dimanche: { completed: false, volume: 0, exercises: [] },
-        mardi: { completed: false, volume: 0, exercises: [] },
-        vendredi: { completed: false, volume: 0, exercises: [] }
+        dimanche: { completed: false, volume: 0, duration: 0, exercises: [] },
+        mardi: { completed: false, volume: 0, duration: 0, exercises: [] },
+        vendredi: { completed: false, volume: 0, duration: 0, exercises: [] }
       };
     }
     return history;
@@ -92,36 +92,112 @@ class StatisticsEngine {
     return Math.round((completed / 3) * 100);
   }
   
-  // ==================== ANALYSE PAR MUSCLE ====================
+  // ==================== DURÉE MOYENNE ====================
+  getAverageSessionDuration() {
+    let totalDuration = 0;
+    let count = 0;
+    for (const week in this.history) {
+      for (const day in this.history[week]) {
+        const d = this.history[week][day];
+        if (d.completed && d.duration) {
+          totalDuration += d.duration;
+          count++;
+        }
+      }
+    }
+    return count ? Math.round(totalDuration / count) : 0;
+  }
   
-  getVolumeByMuscleGroup() {
-    const groups = {};
-    
+  // ==================== TAUX DE CROISSANCE DU VOLUME ====================
+  getVolumeGrowthRate() {
+    const volumes = [];
+    for (let week = 1; week <= 26; week++) {
+      volumes.push(this.calculateWeeklyVolume(week));
+    }
+    const first = volumes.find(v => v > 0) || 0;
+    const last = volumes.reverse().find(v => v > 0) || 0;
+    if (first === 0) return 0;
+    return Math.round(((last - first) / first) * 100);
+  }
+  
+  // ==================== PROGRESSION SUR 8 SEMAINES ====================
+  getProgressionData(weeks = 8) {
+    const data = [];
+    for (let week = 1; week <= 26; week++) {
+      const volume = this.calculateWeeklyVolume(week);
+      const sessions = Object.values(this.history[`week_${week}`] || {}).filter(d => d.completed).length;
+      const completionRate = this.getWeekCompletionRate(week);
+      data.push({ week: `S${week}`, volume, sessions, completionRate });
+    }
+    return data.slice(-weeks);
+  }
+  
+  // ==================== RECORDS PERSONNELS ====================
+  getPersonalRecords() {
+    const records = {};
     for (const week in this.history) {
       for (const day in this.history[week]) {
         const dayData = this.history[week][day];
-        if (dayData.exercises) {
-          dayData.exercises.forEach(ex => {
-            if (!groups[ex.muscleGroup]) {
-              groups[ex.muscleGroup] = 0;
-            }
-            groups[ex.muscleGroup] += ex.volume || 0;
+        (dayData.exercises || []).forEach(ex => {
+          if (!records[ex.name]) {
+            records[ex.name] = { maxWeight: 0, maxVolume: 0, maxReps: 0, date: null };
+          }
+          if (ex.weight > records[ex.name].maxWeight) {
+            records[ex.name].maxWeight = ex.weight;
+            records[ex.name].date = dayData.date || null;
+          }
+          if (ex.volume > records[ex.name].maxVolume) {
+            records[ex.name].maxVolume = ex.volume;
+            records[ex.name].date = dayData.date || null;
+          }
+          if (ex.reps > records[ex.name].maxReps) {
+            records[ex.name].maxReps = ex.reps;
+            records[ex.name].date = dayData.date || null;
+          }
+        });
+      }
+    }
+    return records;
+  }
+  
+  // ==================== PROGRESSION D’UN EXERCICE ====================
+  getExerciseProgress(exerciseName) {
+    const data = [];
+    for (const week in this.history) {
+      for (const day in this.history[week]) {
+        const ex = (this.history[week][day].exercises || []).find(e => e.name === exerciseName);
+        if (ex) {
+          data.push({
+            week,
+            weight: ex.weight,
+            reps: ex.reps,
+            volume: ex.volume,
+            rpe: ex.rpe || null
           });
         }
       }
     }
-    
+    return data;
+  }
+  
+  // ==================== ANALYSE PAR MUSCLE ====================
+  getVolumeByMuscleGroup() {
+    const groups = {};
+    for (const week in this.history) {
+      for (const day in this.history[week]) {
+        const dayData = this.history[week][day];
+        (dayData.exercises || []).forEach(ex => {
+          if (!groups[ex.muscleGroup]) groups[ex.muscleGroup] = 0;
+          groups[ex.muscleGroup] += ex.volume || 0;
+        });
+      }
+    }
     return Object.entries(groups)
-      .map(([name, value]) => ({ 
-        name, 
-        value: Math.round(value)
-      }))
+      .map(([name, value]) => ({ name, value: Math.round(value) }))
       .sort((a, b) => b.value - a.value);
   }
   
   // ==================== VUES GRAPHIQUES ====================
-  
-  // Heatmap : 7 derniers jours
   getLast7DaysMuscleMap() {
     const today = new Date();
     const days = [];
@@ -138,7 +214,6 @@ class StatisticsEngine {
     return days;
   }
   
-  // Radar chart : sets par muscle
   getSetCountPerMuscle(period = "30d") {
     const data = this.getVolumeByMuscleGroup();
     return {
@@ -152,7 +227,6 @@ class StatisticsEngine {
     };
   }
   
-  // Pie chart : répartition musculaire
   getMuscleDistribution(period = "30d") {
     const data = this.getVolumeByMuscleGroup();
     return {
@@ -164,8 +238,7 @@ class StatisticsEngine {
     };
   }
   
-  // Top exercices
-  getTopExercises(period = "30d") {
+ getTopExercises(period = "30d") {
     const exercises = {};
     for (const week in this.history) {
       for (const day in this.history[week]) {
@@ -178,12 +251,11 @@ class StatisticsEngine {
     }
     return Object.entries(exercises)
       .map(([name, count]) => ({ name, count }))
-      .sort((a,b) => b.count - a.count)
-      .slice(0,10);
+      .sort((a, b) => b.count - a.count)
+      .slice(0, 10);
   }
   
   // ==================== UTILITAIRES ====================
-  
   formatVolume(volume) {
     if (volume >= 1000) {
       return `${(volume / 1000).toFixed(1)}t`;
