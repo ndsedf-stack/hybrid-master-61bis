@@ -1,5 +1,5 @@
 /**
- * TIMER MANAGER - VERSION PREMIUM
+ * TIMER MANAGER - VERSION PREMIUM CORRIGÉE
  * Gestion du timer de repos entre séries
  */
 export default class TimerManager {
@@ -80,9 +80,11 @@ export default class TimerManager {
   }
 
   /**
-   * Démarre le timer avec un temps de repos (en secondes)
+   * 🔥 CORRIGÉ : Démarre le timer avec un temps de repos (en secondes)
    */
-  start(seconds, exerciseName = '', setNumber = 0, totalSets = 0) {
+  start(seconds, exerciseName = '', setNumber = 0) {
+    console.log(`🎯 Timer.start() appelé avec:`, { seconds, exerciseName, setNumber });
+    
     this.stop(); // Arrête tout timer en cours
 
     this.initialTime = seconds;
@@ -95,14 +97,14 @@ export default class TimerManager {
       this.exerciseNameDisplay.textContent = exerciseName || 'Exercice';
     }
     if (this.setNumberDisplay) {
-      this.setNumberDisplay.textContent = `Set ${setNumber}/${totalSets}`;
+      this.setNumberDisplay.textContent = `Série ${setNumber}`;
     }
 
     this.show();
     this.updateDisplay();
     this.resume();
 
-    console.log(`⏱️ Timer démarré: ${seconds}s pour ${exerciseName} - Set ${setNumber}`);
+    console.log(`⏱️ Timer démarré: ${seconds}s pour ${exerciseName} - Série ${setNumber}`);
   }
 
   /**
@@ -205,7 +207,17 @@ export default class TimerManager {
     this.stop();
     this.playNotification();
     this.vibrate();
-    this.hide();
+    
+    // 🔥 AJOUT : Affiche un message avant de cacher
+    if (this.timeDisplay) {
+      this.timeDisplay.textContent = '0:00';
+    }
+    
+    // Cache le timer après 2 secondes
+    setTimeout(() => {
+      this.hide();
+    }, 2000);
+    
     console.log('✅ Timer terminé !');
   }
 
@@ -225,7 +237,7 @@ export default class TimerManager {
     // Mise à jour de la barre de progression circulaire
     if (this.progressCircle && this.initialTime > 0) {
       const percentage = (this.remainingTime / this.initialTime) * 100;
-      const circumference = 2 * Math.PI * 54; // rayon = 54
+      const circumference = 2 * Math.PI * 70; // rayon = 70 (corrigé depuis votre HTML)
       const offset = circumference - (percentage / 100) * circumference;
       
       this.progressCircle.style.strokeDasharray = `${circumference} ${circumference}`;
@@ -239,6 +251,8 @@ export default class TimerManager {
   show() {
     if (this.timerWidget) {
       this.timerWidget.classList.add('active');
+      this.timerWidget.style.display = 'block';
+      console.log('👁️ Timer affiché');
     }
   }
 
@@ -248,6 +262,10 @@ export default class TimerManager {
   hide() {
     if (this.timerWidget) {
       this.timerWidget.classList.remove('active');
+      setTimeout(() => {
+        this.timerWidget.style.display = 'none';
+      }, 300);
+      console.log('🙈 Timer caché');
     }
   }
 
@@ -255,22 +273,26 @@ export default class TimerManager {
    * Joue un son de notification
    */
   playNotification() {
-    // Son système simple (beep)
-    const audioContext = new (window.AudioContext || window.webkitAudioContext)();
-    const oscillator = audioContext.createOscillator();
-    const gainNode = audioContext.createGain();
+    try {
+      // Son système simple (beep)
+      const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+      const oscillator = audioContext.createOscillator();
+      const gainNode = audioContext.createGain();
 
-    oscillator.connect(gainNode);
-    gainNode.connect(audioContext.destination);
+      oscillator.connect(gainNode);
+      gainNode.connect(audioContext.destination);
 
-    oscillator.frequency.value = 800;
-    oscillator.type = 'sine';
+      oscillator.frequency.value = 800;
+      oscillator.type = 'sine';
 
-    gainNode.gain.setValueAtTime(0.3, audioContext.currentTime);
-    gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.5);
+      gainNode.gain.setValueAtTime(0.3, audioContext.currentTime);
+      gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.5);
 
-    oscillator.start(audioContext.currentTime);
-    oscillator.stop(audioContext.currentTime + 0.5);
+      oscillator.start(audioContext.currentTime);
+      oscillator.stop(audioContext.currentTime + 0.5);
+    } catch (error) {
+      console.warn('⚠️ Impossible de jouer le son:', error);
+    }
   }
 
   /**
