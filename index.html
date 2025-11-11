@@ -15,6 +15,7 @@
   <link rel="stylesheet" href="styles/07-timer.css" />
   <link rel="stylesheet" href="styles/08-responsive.css" />
   <link rel="stylesheet" href="styles/99-theme-modern.css" /> <!-- ✨ NOUVEAU -->
+  <link rel="stylesheet" href="styles/home.css" /> <!-- ✅ Ajout styles accueil -->
 </head>
 <body>
   <!-- Header -->
@@ -22,9 +23,15 @@
     <h1>💪 Hybrid Master 61</h1>
     <div class="header-actions"></div>
   </header>
+
   <!-- Main Container -->
   <main class="app-container container main-content">
+    <!-- ✅ Accueil avec les séances cliquables -->
+    <section id="homeRoot"></section>
+
+    <!-- Séance en cours -->
     <div id="workout-container" aria-live="polite" aria-busy="false"></div>
+
     <!-- Bottom navigation -->
     <nav class="bottom-nav">
       <button class="btn" id="nav-prev-week" aria-label="Semaine précédente">←</button>
@@ -32,6 +39,7 @@
       <button class="btn" id="nav-next-week" aria-label="Semaine suivante">→</button>
     </nav>
   </main>
+
   <!-- Timer Widget -->
   <div id="timer-widget" aria-hidden="true">
     <div class="timer-header">
@@ -58,6 +66,7 @@
       <button id="timer-skip">Skip</button>
     </div>
   </div>
+
   <!-- JavaScript -->
   <script type="module" src="scripts/app.js"></script>
   <script type="module" src="scripts/ui/theme-switcher.js"></script> <!-- ✨ NOUVEAU -->
