@@ -138,7 +138,7 @@
   padding: 24px;
   border-radius: 16px;
   position: relative;
-  overflow: visible; /* Important pour les émojis */
+  overflow: visible;
   transition: all 0.3s ease;
 }
 
@@ -161,18 +161,18 @@
 .day-card p {
   font-size: 15px;
   margin-bottom: 20px;
-  flex: 1; /* Prend l'espace restant */
+  flex: 1;
   opacity: 0.8;
 }
 
 .day-card button {
   width: 100%;
-  min-height: 48px; /* Touch target iOS */
+  min-height: 48px;
   font-size: 16px;
   font-weight: 600;
   padding: 14px 24px;
   border-radius: 12px;
-  margin-top: auto; /* Colle au bas */
+  margin-top: auto;
   border: none;
   cursor: pointer;
   transition: all 0.2s ease;
@@ -196,6 +196,7 @@
   margin-bottom: var(--spacing-xl);
   box-shadow: var(--shadow-lg);
   border: 2px solid rgba(0, 212, 170, 0.3);
+  overflow: visible;
 }
 
 .workout-header h2 {
@@ -204,7 +205,7 @@
   color: var(--primary-color);
   text-transform: uppercase;
   letter-spacing: 2px;
-  word-wrap: break-word; /* ✅ Fix overflow */
+  word-wrap: break-word;
 }
 
 .workout-meta {
@@ -264,7 +265,6 @@
 
 @media (max-width: 768px) {
   .timer-fixed {
-    /* ✅ Position adaptée pour iPhone 15 avec safe area */
     position: fixed;
     bottom: calc(env(safe-area-inset-bottom, 0px) + 20px);
     left: 50%;
@@ -308,5 +308,5 @@
 .error-message h3 {
   color: var(--danger-color);
   margin-bottom: var(--spacing-sm);
-  word-wrap: break-word; /* ✅ Fix overflow */
+  word-wrap: break-word;
 }
