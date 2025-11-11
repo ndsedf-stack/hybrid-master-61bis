@@ -110,7 +110,7 @@
   white-space: nowrap;
 }
 
-/* Checkbox moderne (corrigée et réduite) */
+/* Checkbox moderne corrigée */
 .serie-check {
   width: 32px;
   height: 32px;
@@ -124,7 +124,7 @@
   cursor: pointer;
   transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
   flex-shrink: 0;
-  margin-left: auto; /* pousse la case à droite */
+  margin-left: auto; /* ✅ pousse la case à droite */
   -webkit-tap-highlight-color: transparent;
 }
 
