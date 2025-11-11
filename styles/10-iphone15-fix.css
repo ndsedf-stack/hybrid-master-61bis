@@ -1,0 +1,36 @@
+/* ✅ Patch iPhone 15 Pro portrait */
+
+@media screen and (max-width: 430px) and (orientation: portrait) {
+  html, body {
+    height: 100%;
+    min-height: 100%;
+    overflow-x: hidden;
+    -webkit-overflow-scrolling: touch;
+    background-color: #000; /* ou ta couleur de fond */
+  }
+
+  .workout-page {
+    padding-bottom: 120px; /* espace pour éviter que le bas soit coupé */
+  }
+
+  .series-list {
+    max-height: calc(100vh - 200px);
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .workout-actions {
+    position: fixed;
+    bottom: env(safe-area-inset-bottom, 20px);
+    left: 0;
+    right: 0;
+    padding: 12px;
+    background: rgba(0, 0, 0, 0.85);
+    z-index: 999;
+  }
+
+  .btn-primary {
+    width: 100%;
+    font-size: 1.2rem;
+  }
+}
