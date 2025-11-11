@@ -1,0 +1,11 @@
+{
+  "totalWeeks": 26,
+  "deloadWeeks": [6, 12, 18, 24, 26],
+  "days": ["Dimanche", "Mardi", "Vendredi", "Maison"],
+  "structure": {
+    "Dimanche": "Dos + Jambes Lourdes + Bras",
+    "Mardi": "Pecs + Épaules + Triceps",
+    "Vendredi": "Dos + Jambes Légères + Bras + Épaules",
+    "Maison": "Full Body entretien"
+  }
+}

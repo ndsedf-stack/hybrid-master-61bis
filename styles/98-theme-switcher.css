@@ -1,0 +1,40 @@
+export default class ThemeSwitcher {
+  constructor() {
+    this.root = document.documentElement;
+    this.storageKey = 'theme';
+    this.defaultTheme = 'dark'; // par défaut pour cohérence visuelle
+  }
+
+  init() {
+    const savedTheme = localStorage.getItem(this.storageKey);
+    const theme = savedTheme || this.defaultTheme;
+    this.applyTheme(theme);
+    this.createToggleButton();
+  }
+
+  applyTheme(theme) {
+    this.root.setAttribute('data-theme', theme);
+    localStorage.setItem(this.storageKey, theme);
+  }
+
+  toggleTheme() {
+    const current = this.root.getAttribute('data-theme');
+    const next = current === 'light' ? 'dark' : 'light';
+    this.applyTheme(next);
+  }
+
+  createToggleButton() {
+    if (document.querySelector('.theme-toggle')) return;
+
+    const btn = document.createElement('button');
+    btn.className = 'theme-toggle';
+    btn.setAttribute('aria-label', 'Basculer thème');
+    btn.innerHTML = `
+      <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+        <path d="M12 3a9 9 0 0 0 0 18c4.97 0 9-4.03 9-9s-4.03-9-9-9z"/>
+      </svg>
+    `;
+    btn.addEventListener('click', () => this.toggleTheme());
+    document.body.appendChild(btn);
+  }
+}

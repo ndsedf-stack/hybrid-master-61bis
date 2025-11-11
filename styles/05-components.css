@@ -1,0 +1,476 @@
+/* ===================================
+   💎 COMPOSANTS MODERNES - Pills, Badges, Buttons, Cards
+   =================================== */
+
+/* 🏷️ BADGES PILLS MODERNES */
+.badge-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-xs);
+  padding: 6px 12px;
+  border-radius: var(--radius-full);
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-semibold);
+  background: var(--glass-bg);
+  backdrop-filter: var(--glass-blur);
+  border: 1px solid var(--glass-border);
+  color: var(--text-primary);
+  transition: all var(--transition-base);
+  white-space: nowrap;
+}
+
+.badge-pill:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-md);
+}
+
+/* Pills avec couleurs */
+.badge-pill.green {
+  background: var(--success-bg);
+  border-color: var(--success-border);
+  color: var(--success);
+}
+
+.badge-pill.blue {
+  background: var(--info-bg);
+  border-color: var(--info-border);
+  color: var(--info);
+}
+
+.badge-pill.red {
+  background: var(--error-bg);
+  border-color: var(--error-border);
+  color: var(--accent);
+}
+
+.badge-pill.orange {
+  background: rgba(245, 158, 11, 0.1);
+  border-color: rgba(245, 158, 11, 0.3);
+  color: #f59e0b;
+}
+
+.badge-pill.purple {
+  background: rgba(139, 92, 246, 0.1);
+  border-color: rgba(139, 92, 246, 0.3);
+  color: #8b5cf6;
+}
+
+/* Pills avec gradient */
+.badge-pill.gradient-green {
+  background: var(--gradient-primary);
+  border: none;
+  color: white;
+}
+
+.badge-pill.gradient-blue {
+  background: var(--gradient-secondary);
+  border: none;
+  color: white;
+}
+
+/* 🔢 BADGES CIRCULAIRES (pour numéros de séries) */
+.badge-circle {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  border-radius: var(--radius-full);
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-bold);
+  background: var(--bg-tertiary);
+  color: var(--text-primary);
+  border: 2px solid var(--glass-border);
+  transition: all var(--transition-base);
+  flex-shrink: 0;
+}
+
+.badge-circle.large {
+  width: 40px;
+  height: 40px;
+  font-size: var(--font-size-lg);
+}
+
+.badge-circle.small {
+  width: 24px;
+  height: 24px;
+  font-size: var(--font-size-xs);
+}
+
+/* Badge circulaire actif avec glow */
+.badge-circle.active {
+  background: var(--gradient-primary);
+  border-color: var(--primary);
+  box-shadow: var(--glow-green);
+  animation: pulse-green 2s infinite;
+}
+
+/* ✅ CHECKMARK BADGE */
+.badge-check {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  border-radius: var(--radius-full);
+  background: var(--success);
+  color: white;
+  font-size: 18px;
+  box-shadow: var(--glow-green);
+  animation: scaleIn var(--transition-base);
+}
+
+/* 🎨 BOUTONS MODERNES */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-sm);
+  padding: 12px 24px;
+  border: none;
+  border-radius: var(--radius-md);
+  font-size: var(--font-size-base);
+  font-weight: var(--font-weight-semibold);
+  cursor: pointer;
+  transition: all var(--transition-base);
+  position: relative;
+  overflow: hidden;
+  font-family: var(--font-primary);
+}
+
+.btn:active {
+  transform: scale(0.98);
+}
+
+/* Bouton Primary avec gradient vert */
+.btn-primary {
+  background: var(--gradient-primary);
+  color: white;
+  box-shadow: var(--shadow-md);
+}
+
+.btn-primary:hover {
+  box-shadow: var(--glow-green);
+  transform: translateY(-2px);
+}
+
+/* Bouton Secondary avec gradient bleu */
+.btn-secondary {
+  background: var(--gradient-secondary);
+  color: white;
+  box-shadow: var(--shadow-md);
+}
+
+.btn-secondary:hover {
+  box-shadow: var(--glow-blue);
+  transform: translateY(-2px);
+}
+
+/* Bouton Danger avec gradient rouge */
+.btn-danger {
+  background: var(--gradient-accent);
+  color: white;
+  box-shadow: var(--shadow-md);
+}
+
+.btn-danger:hover {
+  box-shadow: var(--glow-red);
+  transform: translateY(-2px);
+}
+
+/* Bouton Ghost */
+.btn-ghost {
+  background: transparent;
+  border: 2px solid var(--glass-border);
+  color: var(--text-primary);
+  backdrop-filter: var(--glass-blur);
+}
+
+.btn-ghost:hover {
+  background: var(--glass-bg);
+  border-color: var(--primary);
+  box-shadow: var(--shadow-sm);
+}
+
+/* Tailles de boutons */
+.btn-sm {
+  padding: 8px 16px;
+  font-size: var(--font-size-sm);
+}
+
+.btn-lg {
+  padding: 16px 32px;
+  font-size: var(--font-size-lg);
+}
+
+.btn-full {
+  width: 100%;
+}
+
+/* Effet shimmer sur boutons */
+.btn::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: var(--shimmer);
+  transition: left var(--transition-slow);
+}
+
+.btn:hover::before {
+  left: 100%;
+}
+
+/* 🃏 CARDS MODERNES avec Glassmorphism */
+.card {
+  background: var(--glass-bg);
+  backdrop-filter: var(--glass-blur);
+  -webkit-backdrop-filter: var(--glass-blur);
+  border: 1px solid var(--glass-border);
+  border-radius: var(--radius-lg);
+  padding: var(--space-lg);
+  box-shadow: var(--shadow-md);
+  transition: all var(--transition-base);
+  animation: fadeIn var(--transition-base);
+}
+
+.card:hover {
+  background: var(--bg-card-hover);
+  box-shadow: var(--shadow-lg);
+  transform: translateY(-4px);
+}
+
+/* Card avec bordure colorée */
+.card-border-green {
+  border-left: 4px solid var(--primary);
+  box-shadow: var(--shadow-md), inset 4px 0 0 var(--primary);
+}
+
+.card-border-green:hover {
+  box-shadow: var(--shadow-lg), var(--glow-green), inset 4px 0 0 var(--primary);
+}
+
+.card-border-blue {
+  border-left: 4px solid var(--secondary);
+  box-shadow: var(--shadow-md), inset 4px 0 0 var(--secondary);
+}
+
+.card-border-red {
+  border-left: 4px solid var(--accent);
+  box-shadow: var(--shadow-md), inset 4px 0 0 var(--accent);
+}
+
+.card-border-orange {
+  border-left: 4px solid #f97316;
+  box-shadow: var(--shadow-md), inset 4px 0 0 #f97316;
+}
+
+/* Card compacte */
+.card-compact {
+  padding: var(--space-md);
+}
+
+/* Card avec header */
+.card-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: var(--space-md);
+  padding-bottom: var(--space-md);
+  border-bottom: 1px solid var(--glass-border);
+}
+
+.card-header h3 {
+  margin: 0;
+  font-size: var(--font-size-lg);
+  font-weight: var(--font-weight-bold);
+  color: var(--text-primary);
+}
+
+/* Card body */
+.card-body {
+  color: var(--text-secondary);
+}
+
+/* Card footer */
+.card-footer {
+  margin-top: var(--space-md);
+  padding-top: var(--space-md);
+  border-top: 1px solid var(--glass-border);
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+}
+
+/* 📊 STATS CARDS */
+.stat-card {
+  background: var(--glass-bg);
+  backdrop-filter: var(--glass-blur);
+  border: 1px solid var(--glass-border);
+  border-radius: var(--radius-md);
+  padding: var(--space-md);
+  text-align: center;
+  transition: all var(--transition-base);
+}
+
+.stat-card:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-md);
+}
+
+.stat-value {
+  font-size: var(--font-size-3xl);
+  font-weight: var(--font-weight-extrabold);
+  background: var(--gradient-primary);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  margin: 0;
+}
+
+.stat-label {
+  font-size: var(--font-size-sm);
+  color: var(--text-secondary);
+  margin-top: var(--space-xs);
+}
+
+/* 🎯 PROGRESS BAR MODERNE */
+.progress-bar {
+  width: 100%;
+  height: 8px;
+  background: var(--bg-tertiary);
+  border-radius: var(--radius-full);
+  overflow: hidden;
+  position: relative;
+}
+
+.progress-fill {
+  height: 100%;
+  background: var(--gradient-primary);
+  border-radius: var(--radius-full);
+  transition: width var(--transition-base);
+  position: relative;
+  overflow: hidden;
+}
+
+.progress-fill::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: var(--shimmer);
+  animation: shimmer 2s infinite;
+}
+
+/* 🔘 TOGGLE SWITCH */
+.toggle {
+  position: relative;
+  display: inline-block;
+  width: 52px;
+  height: 28px;
+}
+
+.toggle input {
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+.toggle-slider {
+  position: absolute;
+  cursor: pointer;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: var(--bg-tertiary);
+  border-radius: var(--radius-full);
+  transition: var(--transition-base);
+  border: 2px solid var(--glass-border);
+}
+
+.toggle-slider:before {
+  position: absolute;
+  content: "";
+  height: 20px;
+  width: 20px;
+  left: 4px;
+  bottom: 2px;
+  background: white;
+  border-radius: var(--radius-full);
+  transition: var(--transition-base);
+}
+
+.toggle input:checked + .toggle-slider {
+  background: var(--gradient-primary);
+  border-color: var(--primary);
+  box-shadow: var(--glow-green);
+}
+
+.toggle input:checked + .toggle-slider:before {
+  transform: translateX(24px);
+}
+
+/* 🏷️ TAG MODERNE */
+.tag {
+  display: inline-block;
+  padding: 4px 12px;
+  background: var(--bg-tertiary);
+  border-radius: var(--radius-sm);
+  font-size: var(--font-size-xs);
+  font-weight: var(--font-weight-medium);
+  color: var(--text-secondary);
+  border: 1px solid var(--glass-border);
+}
+
+.tag.success {
+  background: var(--success-bg);
+  color: var(--success);
+  border-color: var(--success-border);
+}
+
+/* 🎨 DIVIDER */
+.divider {
+  width: 100%;
+  height: 1px;
+  background: var(--glass-border);
+  margin: var(--space-lg) 0;
+}
+
+.divider-text {
+  display: flex;
+  align-items: center;
+  gap: var(--space-md);
+  color: var(--text-tertiary);
+  font-size: var(--font-size-sm);
+  margin: var(--space-lg) 0;
+}
+
+.divider-text::before,
+.divider-text::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: var(--glass-border);
+}
+
+/* 📱 RESPONSIVE */
+@media (max-width: 768px) {
+  .btn {
+    padding: 10px 20px;
+    font-size: var(--font-size-sm);
+  }
+  
+  .card {
+    padding: var(--space-md);
+  }
+  
+  .badge-circle {
+    width: 28px;
+    height: 28px;
+  }
+}
