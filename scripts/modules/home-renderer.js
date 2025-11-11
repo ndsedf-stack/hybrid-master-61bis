@@ -18,10 +18,11 @@ export class HomeRenderer {
       return;
     }
 
-    const days = Object.keys(weekData);
-    this.container.innerHTML = `<h2>📅 Séances semaine ${weekNumber}</h2><div class="home-grid"></div>`;
+    // ✅ Ajout pour confirmer que la version test6 est bien déployée
+    this.container.innerHTML = `<h2>📅 Semaine ${weekNumber} — version test6</h2><div class="home-grid"></div>`;
     const grid = this.container.querySelector(".home-grid");
 
+    const days = Object.keys(weekData);
     days.forEach(day => {
       const session = weekData[day];
       const totalSets = session.exercises.reduce(
@@ -32,7 +33,7 @@ export class HomeRenderer {
       const card = document.createElement("div");
       card.className = "day-card";
       card.innerHTML = `
-        <h4>${capitalize(day)}</h4>
+        <h4>💪 ${capitalize(day)}</h4>
         <p>${session.exercises[0]?.muscleGroup || "Séance personnalisée"}</p>
         <p>${session.exercises.length} exercices · ${totalSets} séries</p>
         <button data-day="${day}">Voir la séance</button>
