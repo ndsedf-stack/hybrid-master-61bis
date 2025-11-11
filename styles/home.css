@@ -1,0 +1,50 @@
+/* === STYLES ACCUEIL — HOME === */
+
+.home-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 1rem;
+  margin-top: 1rem;
+}
+
+.day-card {
+  background-color: #1e2733;
+  padding: 1rem;
+  border-radius: 10px;
+  color: #e8edf2;
+  box-shadow: 0 0 0 1px #2a3542;
+  text-align: center;
+  transition: transform 0.2s ease;
+}
+
+.day-card:hover {
+  transform: scale(1.02);
+}
+
+.day-card h4 {
+  margin-bottom: 0.5rem;
+  font-size: 1.1rem;
+  color: #00d4aa;
+}
+
+.day-card p {
+  margin: 0.3rem 0;
+  font-size: 0.9rem;
+  color: #9aa7b2;
+}
+
+.day-card button {
+  margin-top: 0.8rem;
+  background-color: #00d4aa;
+  color: #fff;
+  border: none;
+  padding: 0.5rem 1rem;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 0.9rem;
+  transition: background-color 0.2s ease;
+}
+
+.day-card button:hover {
+  background-color: #00b896;
+}
