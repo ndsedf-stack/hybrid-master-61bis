@@ -13,13 +13,14 @@
   display: flex;
   align-items: center;
   gap: 0.75rem;
-  padding: 0.875rem 1rem;
+  padding: 0.5rem 0.75rem; /* compacté */
   background: rgba(255, 255, 255, 0.03);
   border: 1px solid rgba(255, 255, 255, 0.08);
   border-radius: 12px;
   transition: all 0.2s ease;
   position: relative;
   backdrop-filter: blur(10px);
+  animation: serieAppear 0.3s ease-out backwards;
 }
 
 .serie-item:hover {
@@ -28,9 +29,23 @@
 }
 
 .serie-item.completed {
-  background: linear-gradient(135deg, rgba(16, 185, 129, 0.15) 0%, rgba(5, 150, 105, 0.1) 100%);
+  background: rgba(255, 255, 255, 0.03); /* fond neutre */
   border-color: rgba(16, 185, 129, 0.4);
-  box-shadow: 0 0 20px rgba(16, 185, 129, 0.15);
+  box-shadow: none;
+  position: relative;
+}
+
+/* Accent vert fin à droite */
+.serie-item.completed::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 8px;
+  height: 100%;
+  border-radius: 0 12px 12px 0;
+  background: linear-gradient(180deg, #10B981 0%, #059669 100%);
+  box-shadow: 0 0 10px rgba(16, 185, 129, 0.25);
 }
 
 /* Numéro de série */
@@ -60,14 +75,15 @@
 
 /* Informations série */
 .serie-info {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
   flex: 1;
   min-width: 0;
-  display: flex;
-  flex-direction: column;
-  gap: 0.25rem;
 }
 
-.serie-reps {
+.serie-reps,
+.serie-weight {
   font-size: 0.95rem;
   font-weight: 600;
   color: var(--text-primary);
@@ -75,11 +91,9 @@
 }
 
 .serie-weight {
-  font-size: 1.35rem;
+  font-size: 1.2rem;
   font-weight: 700;
   color: #ff8c42;
-  line-height: 1;
-  letter-spacing: -0.02em;
 }
 
 .serie-item.completed .serie-weight {
@@ -91,11 +105,12 @@
   display: flex;
   align-items: center;
   gap: 0.375rem;
-  padding: 0.375rem 0.625rem;
+  padding: 0.25rem 0.5rem; /* compacté */
   background: rgba(59, 130, 246, 0.12);
   border: 1px solid rgba(59, 130, 246, 0.25);
   border-radius: 8px;
   flex-shrink: 0;
+  margin-left: 0.25rem;
 }
 
 .rest-icon {
@@ -110,12 +125,13 @@
   white-space: nowrap;
 }
 
-/* Checkbox moderne corrigée */
+/* Checkbox moderne */
 .serie-check {
-  width: 32px;
-  height: 32px;
-  min-width: 32px;
-  border-radius: 8px;
+  margin-left: auto; /* pousse à droite */
+  width: 28px;
+  height: 28px;
+  min-width: 28px;
+  border-radius: 6px;
   border: 2px solid rgba(255, 255, 255, 0.2);
   background: rgba(255, 255, 255, 0.05);
   display: flex;
@@ -124,7 +140,6 @@
   cursor: pointer;
   transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
   flex-shrink: 0;
-  margin-left: auto; /* ✅ pousse la case à droite */
   -webkit-tap-highlight-color: transparent;
 }
 
@@ -145,7 +160,7 @@
 }
 
 .check-icon {
-  font-size: 1.1rem; /* ajusté au nouveau bouton */
+  font-size: 1rem;
   color: white;
   font-weight: bold;
   opacity: 0;
@@ -168,10 +183,6 @@
     opacity: 1;
     transform: translateY(0);
   }
-}
-
-.serie-item {
-  animation: serieAppear 0.3s ease-out backwards;
 }
 
 .serie-item:nth-child(1) { animation-delay: 0.05s; }
@@ -199,17 +210,17 @@
   }
   
   .serie-weight {
-    font-size: 1.2rem;
+    font-size: 1.1rem;
   }
   
   .serie-check {
-    width: 30px;
-    height: 30px;
-    border-radius: 8px;
+    width: 26px;
+    height: 26px;
+    border-radius: 6px;
   }
   
   .check-icon {
-    font-size: 1rem;
+    font-size: 0.9rem;
   }
   
   .rest-time {
@@ -217,7 +228,7 @@
   }
   
   .serie-rest {
-    padding: 0.3rem 0.5rem;
+    padding: 0.2rem 0.4rem;
   }
 }
 
@@ -228,97 +239,20 @@
   }
   
   .serie-number {
-    width: 30px;
-    height: 30px;
+    width: 28px;
+    height: 28px;
     font-size: 0.85rem;
   }
   
   .serie-check {
-    width: 28px;
-    height: 28px;
+    width: 24px;
+    height: 24px;
   }
   
   .serie-rest {
-    padding: 0.25rem 0.4rem;
+    padding: 0.2rem 0.35rem;
   }
-  /* Ligne compacte (garde .serie-item mais rend la ligne plus fine) */
-.serie-item {
-  display: flex;
-  align-items: center;
-  gap: 0.75rem;
-  padding: 0.5rem 0.75rem; /* réduit la hauteur globale */
-}
-
-/* Met tout sur une ligne: numéro, infos, repos, case à droite */
-.serie-info {
-  display: flex;
-  align-items: center;
-  gap: 0.75rem;
-  flex: 1;         /* prend la largeur disponible */
-  min-width: 0;
-}
-
-/* Garde reps/poids lisibles mais compacts */
-.serie-reps,
-.serie-weight {
-  font-size: 0.95rem;
-  font-weight: 600;
-  color: var(--text-primary);
-  line-height: 1.2;
-}
-
-/* Badge repos compact et non envahissant */
-.serie-rest {
-  display: flex;
-  align-items: center;
-  gap: 0.375rem;
-  padding: 0.25rem 0.5rem; /* plus fin */
-  flex-shrink: 0;
-  margin-left: 0.25rem;
-}
-
-/* Case à droite, petite et isolée */
-.serie-check {
-  margin-left: auto;  /* pousse à l’extrême droite */
-  width: 28px;
-  height: 28px;
-  min-width: 28px;
-  border-radius: 6px;
-}
-
-/* Évite que le fond vert recouvre toute la carte: accent subtil */
-.serie-item.completed {
-  background: rgba(255, 255, 255, 0.03); /* garde ton fond d’origine */
-  border-color: rgba(16, 185, 129, 0.4);
-  box-shadow: none;
-  position: relative;
-}
-
-.serie-item.completed::after {
-  content: '';
-  position: absolute;
-  top: 0;
-  right: 0;
-  width: 8px;        /* ruban vert fin, ajuste à 6px/4px si tu veux */
-  height: 100%;
-  border-radius: 0 12px 12px 0;
-  background: linear-gradient(180deg, #10B981 0%, #059669 100%);
-  box-shadow: 0 0 10px rgba(16, 185, 129, 0.25);
-}
-
-/* Garde le feedback vert sur le numéro et la case comme chez toi */
-.serie-item.completed .serie-number {
-  background: linear-gradient(135deg, #10B981 0%, #059669 100%);
-  color: white;
-  border-color: transparent;
-  box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);
-}
-
-.serie-item.completed .serie-check {
-  background: linear-gradient(135deg, #10B981 0%, #059669 100%);
-  border-color: transparent;
-}
-
+  
   .rest-icon {
     font-size: 0.75rem;
   }
