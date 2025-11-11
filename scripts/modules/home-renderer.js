@@ -1,4 +1,6 @@
 // modules/home-renderer.js
+import { LocalStorage } from './local-storage.js';
+
 export class HomeRenderer {
   constructor(containerId = "homeRoot") {
     this.container = document.getElementById(containerId);
