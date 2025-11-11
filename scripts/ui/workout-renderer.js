@@ -121,42 +121,25 @@ export default class WorkoutRenderer {
     serieItem.dataset.exerciseId = exercise.id || exercise.name;
     serieItem.dataset.setNumber = index + 1;
 
-    const number = document.createElement('div');
-    number.className = 'serie-number';
-    number.textContent = index + 1;
-    serieItem.appendChild(number);
-
-    const info = document.createElement('div');
-    info.className = 'serie-info';
-
-    const repsDiv = document.createElement('div');
-    repsDiv.className = 'serie-reps';
-    repsDiv.textContent = `${serie.reps} reps`;
-
-    const weightDiv = document.createElement('div');
-    weightDiv.className = 'serie-weight';
-    weightDiv.textContent = `${serie.weight} kg`;
-
-    info.appendChild(repsDiv);
-    info.appendChild(weightDiv);
-    serieItem.appendChild(info);
-
-    const restDiv = document.createElement('div');
-    restDiv.className = 'serie-rest';
-    restDiv.innerHTML = `
-      <span class="rest-icon">⏱️</span>
-      <span class="rest-time">${serie.rest || defaultRest}s</span>
+    // ✅ Ligne compacte : numéro, reps, poids, repos, case
+    serieItem.innerHTML = `
+      <div class="serie-number">${index + 1}</div>
+      <div class="serie-info">
+        <div class="serie-reps">${serie.reps} reps</div>
+        <div class="serie-weight">${serie.weight} kg</div>
+      </div>
+      <div class="serie-rest">
+        <span class="rest-icon">⏱️</span>
+        <span class="rest-time">${serie.rest || defaultRest}s</span>
+      </div>
+      <button class="serie-check" type="button"
+        data-exercise-id="${exercise.id || exercise.name}"
+        data-set-number="${index + 1}">
+        <span class="check-icon">✓</span>
+      </button>
     `;
-    serieItem.appendChild(restDiv);
 
-    const button = document.createElement('button');
-    button.className = 'serie-check';
-    button.type = 'button';
-    button.dataset.exerciseId = exercise.id || exercise.name;
-    button.dataset.setNumber = index + 1;
-    button.innerHTML = `<span class="check-icon">✓</span>`;
-    serieItem.appendChild(button);
-
+    const button = serieItem.querySelector('.serie-check');
     button.addEventListener('click', () => {
       if (serieItem.classList.contains('completed')) return;
 
