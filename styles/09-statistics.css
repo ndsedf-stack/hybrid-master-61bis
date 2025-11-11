@@ -43,14 +43,6 @@ h2, h3 {
   margin: 0 auto;
 }
 
-/* Heatmap → occupe toute la largeur */
-#heatmap .heatmap-grid {
-  display: grid;
-  grid-template-columns: repeat(7, 1fr);
-  gap: 0.5rem;
-  margin-top: 1rem;
-}
-
 /* === Légendes === */
 .legend {
   display: flex;
@@ -108,6 +100,13 @@ h2, h3 {
 }
 
 /* === Heatmap === */
+#heatmap .heatmap-grid {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 0.5rem;
+  margin-top: 1rem;
+}
+
 .day {
   background-color: #1e2733;
   padding: 0.8rem;
@@ -177,4 +176,8 @@ h2, h3 {
   #progression-8weeks .chart-wrap { height: 220px; }
   #radar .chart-wrap { height: 180px; }
   #pie .chart-wrap { height: 200px; }
+
+  .weekly-summary {
+    grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+  }
 }
