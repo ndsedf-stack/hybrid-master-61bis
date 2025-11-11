@@ -1,6 +1,7 @@
 import ProgramData from './program-data.js';
 import WorkoutRenderer from './ui/workout-renderer.js';
 import TimerManager from './modules/timer-manager.js';
+import HomeRenderer from './modules/home-renderer.js'; // ✅ nouveau module
 
 class App {
   constructor() {
@@ -8,6 +9,7 @@ class App {
     this.timer = new TimerManager();
     this.weekNumber = 1;
     this.dayName = 'dimanche';
+    this.home = new HomeRenderer('homeRoot'); // ✅ initialisation accueil
   }
 
   async init() {
@@ -15,8 +17,11 @@ class App {
     this.renderer.init();
     this.timer.init();
     this.renderer.timerManager = this.timer;
+
+    this.home.render(this.weekNumber); // ✅ affiche les séances cliquables
     this.renderWorkout();
     this.attachEvents();
+
     console.log('✅ Application prête !');
   }
 
@@ -36,6 +41,7 @@ class App {
     document.getElementById('nav-prev-week')?.addEventListener('click', () => {
       if (this.weekNumber > 1) {
         this.weekNumber--;
+        this.home.render(this.weekNumber); // ✅ met à jour l’accueil
         this.renderWorkout();
       }
     });
@@ -43,6 +49,7 @@ class App {
     document.getElementById('nav-next-week')?.addEventListener('click', () => {
       if (this.weekNumber < 26) {
         this.weekNumber++;
+        this.home.render(this.weekNumber); // ✅ met à jour l’accueil
         this.renderWorkout();
       }
     });
@@ -68,6 +75,15 @@ class App {
         const restTime = exercise.rest || 90;
         this.timer.start(restTime, exercise.name, setNumber);
       }
+    });
+
+    // ✅ écoute les boutons "Voir la séance" depuis l’accueil
+    document.getElementById('homeRoot')?.addEventListener('click', (e) => {
+      const btn = e.target.closest('button[data-day]');
+      if (!btn) return;
+      const day = btn.dataset.day;
+      this.dayName = day;
+      this.renderWorkout();
     });
   }
 
