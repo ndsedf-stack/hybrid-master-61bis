@@ -1,7 +1,7 @@
 import ProgramData from './program-data.js';
 import WorkoutRenderer from './ui/workout-renderer.js';
 import TimerManager from './modules/timer-manager.js';
-import HomeRenderer from './modules/home-renderer.js'; // ✅ nouveau module
+import { HomeRenderer } from './modules/home-renderer.js'; // ✅ import corrigé
 
 class App {
   constructor() {
