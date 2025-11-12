@@ -67,11 +67,11 @@ class HybridMasterApp {
     }
 
     try {
-      // Récupérer les infos générales de la semaine
+      // Infos générales de la semaine
       const weekData = this.programData.getWeek(this.currentWeek);
       console.log('📊 Données semaine:', weekData);
       
-      // Construire les jours directement avec getWorkout()
+      // Construire les jours avec getWorkout()
       const jours = [
         { key: 'dimanche', location: 'Maison' },
         { key: 'mardi', location: 'Salle' },
@@ -96,7 +96,7 @@ class HybridMasterApp {
       this.home.render(container, formattedData);
       console.log('✅ Home.render() appelé');
 
-      // Mettre à jour le label de semaine dans la navigation
+      // Mettre à jour le label de semaine
       const weekLabel = document.getElementById('current-week-label');
       if (weekLabel) {
         weekLabel.textContent = `Semaine ${this.currentWeek}`;
