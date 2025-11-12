@@ -4,46 +4,62 @@
 
 export default class WorkoutRenderer {
   constructor() {
-    this.timerManager = null;
     this.currentWorkout = null;
-  }
-
-  init() {
     console.log('✅ WorkoutRenderer initialisé');
   }
 
-  setTimerManager(timerManager) {
-    this.timerManager = timerManager;
-    console.log('✅ TimerManager connecté au renderer');
-  }
-
   renderWorkout(container, dayData, week, day) {
+    console.log('🎨 Rendu de la séance...');
+    console.log('📊 Données reçues:', dayData);
+    
     if (!container) {
       console.error('❌ Container invalide');
       return;
     }
 
+    if (!dayData || !dayData.exercises) {
+      console.error('❌ Données de séance invalides');
+      container.innerHTML = '<p>Erreur : Aucun exercice trouvé</p>';
+      return;
+    }
+
     this.currentWorkout = { week, day, data: dayData };
+
+    // Récupérer le nom et la location de manière sûre
+    const workoutName = dayData.name || dayData.day || day || 'Séance';
+    const location = dayData.location || 'Salle';
 
     // Générer le HTML
     const html = `
-      <div class="workout-header">
-        <h2 class="workout-title">${dayData.location.toUpperCase()}</h2>
-        <div class="workout-meta">
-          <span class="workout-week">Semaine ${week}</span>
-          <span class="workout-day">${day.charAt(0).toUpperCase() + day.slice(1)}</span>
+      <div class="workout-container">
+        <div class="workout-header">
+          <h2 class="workout-title">${location.toUpperCase()}</h2>
+          <div class="workout-meta">
+            <span class="workout-week">Semaine ${week}</span>
+            <span class="workout-day">${this.capitalize(day)}</span>
+          </div>
+          <div class="workout-stats">
+            <span>${dayData.exercises.length} exercices</span>
+            <span>${dayData.totalSets || this.countTotalSets(dayData.exercises)} séries</span>
+          </div>
         </div>
-      </div>
-      
-      <div class="workout-content">
-        ${dayData.exercises.map((exercise, index) => this.createExerciseCard(exercise, index)).join('')}
+        
+        <div class="workout-content">
+          ${dayData.exercises.map((exercise, index) => this.createExerciseCard(exercise, index)).join('')}
+        </div>
       </div>
     `;
 
     container.innerHTML = html;
 
     // ✅ ATTACHER LES EVENT LISTENERS APRÈS L'INSERTION DU HTML
-    this.attachEventListeners(container, dayData);
+    this.attachEventListeners(container);
+    
+    console.log('✅ Séance affichée avec succès');
+  }
+
+  countTotalSets(exercises) {
+    return exercises.reduce((sum, ex) => sum + (ex.sets || 0), 0);
   }
 
   createExerciseCard(exercise, index) {
@@ -121,20 +137,20 @@ export default class WorkoutRenderer {
   /**
    * ✅ FONCTION CRITIQUE : Attache les event listeners APRÈS l'insertion HTML
    */
-  attachEventListeners(container, dayData) {
+  attachEventListeners(container) {
     console.log('🔗 Attachement des event listeners...');
     
     // Récupérer TOUS les boutons .serie-check
     const buttons = container.querySelectorAll('.serie-check');
     console.log(`📍 ${buttons.length} boutons trouvés`);
 
-    buttons.forEach((button, index) => {
+    buttons.forEach((button) => {
       button.addEventListener('click', (e) => {
         e.preventDefault();
         e.stopPropagation();
         
-        console.log(`✅ Clic sur bouton série ${index + 1}`);
-        this.handleSetCompletion(button, dayData);
+        console.log('✅ Clic sur bouton série');
+        this.handleSetCompletion(button);
       });
     });
 
@@ -144,23 +160,16 @@ export default class WorkoutRenderer {
   /**
    * Gère la validation d'une série
    */
-  handleSetCompletion(button, dayData) {
+  handleSetCompletion(button) {
     console.log('🎯 handleSetCompletion appelé');
     
-    // Vérifier que le timer est connecté
-    if (!this.timerManager) {
-      console.error('❌ TimerManager est null !');
-      alert('⚠️ Timer non initialisé. Rechargez la page.');
-      return;
-    }
-
     // Récupérer les données du bouton
     const exerciseIndex = parseInt(button.dataset.exerciseIndex);
     const setIndex = parseInt(button.dataset.setIndex);
     const restTime = parseInt(button.dataset.restTime) || 0;
     const exerciseName = button.dataset.exerciseName;
 
-    console.log(`📊 Données:`, { exerciseIndex, setIndex, restTime, exerciseName });
+    console.log(`📊 Série validée: ${exerciseName} - Set ${setIndex + 1}`);
 
     // Marquer comme complété
     const serieItem = button.closest('.serie-item');
@@ -170,12 +179,9 @@ export default class WorkoutRenderer {
       button.disabled = true;
     }
 
-    // Démarrer le timer si repos > 0
+    // TODO: Démarrer le timer si repos > 0
     if (restTime > 0) {
-      console.log(`⏱️ Démarrage du timer: ${restTime}s pour ${exerciseName}`);
-      this.timerManager.start(restTime, exerciseName, setIndex + 1);
-    } else {
-      console.log('ℹ️ Pas de repos pour cet exercice');
+      console.log(`⏱️ Timer à implémenter: ${restTime}s pour ${exerciseName}`);
     }
 
     // Sauvegarder la progression
@@ -194,25 +200,10 @@ export default class WorkoutRenderer {
   }
 
   /**
-   * Charge la progression sauvegardée
+   * Capitalise la première lettre
    */
-  loadProgress(container) {
-    if (!this.currentWorkout) return;
-
-    const buttons = container.querySelectorAll('.serie-check');
-    buttons.forEach(button => {
-      const exerciseIndex = button.dataset.exerciseIndex;
-      const setIndex = button.dataset.setIndex;
-      const key = `workout_${this.currentWorkout.week}_${this.currentWorkout.day}_${exerciseIndex}_${setIndex}`;
-      
-      if (localStorage.getItem(key) === 'completed') {
-        const serieItem = button.closest('.serie-item');
-        if (serieItem) {
-          serieItem.classList.add('completed');
-          button.classList.add('checked');
-          button.disabled = true;
-        }
-      }
-    });
+  capitalize(str) {
+    if (!str) return '';
+    return str.charAt(0).toUpperCase() + str.slice(1);
   }
 }
