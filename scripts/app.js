@@ -172,6 +172,7 @@ class HybridMasterApp {
             // Workout Renderer
             this.workoutRenderer = new WorkoutRenderer();
             this.workoutRenderer.setTimerManager(this.timer);
+            this.workoutRenderer.setBackCallback(() => this.showHome());
             console.log('✅ Workout renderer initialisé');
             
             // Navigation
