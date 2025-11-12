@@ -1,40 +1,58 @@
-/**
- * HYBRID MASTER 51 - APPLICATION PRINCIPALE
- */
+// scripts/app.js
+// Point d'entrée principal de l'application
 
-// ✅ IMPORTS CORRIGÉS selon la structure réelle
-import { PROGRAM_DATA } from './scripts/program-data.js';  // Dans scripts/
-import WorkoutRenderer from './ui/workout-renderer.js';  // Dans scripts/ui/
-import TimerManager from './modules/timer-manager.js';  // Dans scripts/modules/
-import { NavigationUI } from './ui/navigation-ui.js';  // Dans scripts/ui/
-import ThemeSwitcher from './ui/theme-switcher.js';  // Dans scripts/ui/
-import { HomeRenderer } from './modules/home-renderer.js';  // Dans scripts/modules/
+// ====================================================================
+// IMPORTS
+// ====================================================================
+import programData from './program-data.js'; // ← CHANGÉ : default export
+import WorkoutRenderer from './ui/workout-renderer.js';
+import TimerManager from './modules/timer-manager.js';
+import { NavigationUI } from './ui/navigation-ui.js';
+import ThemeSwitcher from './ui/theme-switcher.js';
+import { HomeRenderer } from './modules/home-renderer.js';
 
-class App {
+// ====================================================================
+// CLASSE PRINCIPALE APPLICATION
+// ====================================================================
+class HybridMasterApp {
   constructor() {
-    console.log('🚀 Initialisation de Hybrid Master 51...');
+    console.log('🚀 Initialisation de l\'application...');
     
-    // 1️⃣ CRÉER LE TIMER EN PREMIER
+    // Récupérer les données du programme
+    this.programData = programData; // ← Instance de ProgramData
+    
+    // Initialiser les modules
     this.timer = new TimerManager();
-    
-    // 2️⃣ CRÉER LE RENDERER AVEC LE TIMER
     this.renderer = new WorkoutRenderer();
-    this.renderer.setTimerManager(this.timer); // ✅ CONNECTER IMMÉDIATEMENT
+    this.renderer.setTimerManager(this.timer); // ✅ CONNEXION IMMÉDIATE
     
-    // 3️⃣ CRÉER LES AUTRES COMPOSANTS
-    this.navigation = new NavigationUI();
-    this.themeSwitcher = new ThemeSwitcher();
-    this.home = new HomeRenderer();
-    this.programData = PROGRAM_DATA;
+    this.navigation = new NavigationUI(
+      (week, day) => this.loadWorkout(week, day),
+      () => this.showHome()
+    );
     
-    console.log('✅ Timer connecté au renderer');
+    this.theme = new ThemeSwitcher();
+    
+    this.home = new HomeRenderer(
+      'app',
+      (dayData) => this.handleDaySelection(dayData)
+    );
+    
+    // État actuel
+    this.currentWeek = 1;
+    this.currentDay = null;
+    
+    console.log('✅ Modules initialisés');
   }
-
+  
+  // ====================================================================
+  // INITIALISATION
+  // ====================================================================
   async init() {
+    console.log('🔧 Initialisation des composants...');
+    
     try {
-      console.log('🔧 Initialisation des composants...');
-      
-      // Initialiser le timer EN PREMIER
+      // Initialiser le timer
       this.timer.init();
       console.log('✅ Timer initialisé');
       
@@ -46,95 +64,172 @@ class App {
       this.navigation.init();
       console.log('✅ Navigation initialisée');
       
-      // Initialiser le theme switcher
-      this.themeSwitcher.init();
-      console.log('✅ Theme switcher initialisé');
+      // Initialiser le thème
+      this.theme.init();
+      console.log('✅ Thème initialisé');
       
-      // Setup les callbacks de navigation
-      this.setupNavigationCallbacks();
-      
-      // Afficher la page d'accueil
+      // Afficher l'accueil
       this.showHome();
+      console.log('✅ Page d\'accueil affichée');
       
-      console.log('✅ Application initialisée avec succès !');
     } catch (error) {
       console.error('❌ Erreur lors de l\'initialisation:', error);
     }
   }
-
-  setupNavigationCallbacks() {
-    // Callback quand on change de semaine
-    this.navigation.onWeekChange = (week, day) => {
-      console.log(`📅 Navigation: Semaine ${week}, ${day}`);
-      this.showWorkout(week, day);
-    };
-
-    // Callback quand on change de jour
-    this.navigation.onDayChange = (week, day) => {
-      console.log(`📅 Changement de jour: ${day}`);
-      this.showWorkout(week, day);
-    };
-  }
-
+  
+  // ====================================================================
+  // AFFICHAGE PAGE D'ACCUEIL
+  // ====================================================================
   showHome() {
-    const container = document.getElementById('workout-container');
-    if (!container) {
-      console.error('❌ Container workout-container introuvable');
-      return;
-    }
-
-    // 🔍 DEBUG : Vérifier la structure des données
-    console.log('🔍 DEBUG programData:', this.programData);
-    console.log('🔍 DEBUG weeks:', this.programData?.weeks);
-    console.log('🔍 DEBUG firstWeek:', this.programData?.weeks?.[0]);
-
-    // Callback quand on sélectionne un jour depuis l'accueil
-    this.home.onDaySelect = (day) => {
-      const state = this.navigation.getState();
-      this.navigation.selectDay(day);
-      this.showWorkout(state.week, day);
-    };
-
-    // Afficher l'accueil
-    console.log('🏠 Appel de home.render...');
-    this.home.render(container, this.programData);
-    console.log('✅ home.render terminé');
-  }
-
-  showWorkout(week, day) {
-    console.log(`💪 Affichage workout: Semaine ${week}, ${day}`);
+    console.log('🏠 Affichage de la page d\'accueil...');
     
-    const container = document.getElementById('workout-container');
+    const container = document.getElementById('app');
     if (!container) {
-      console.error('❌ Container introuvable');
+      console.error('❌ Container #app introuvable');
       return;
     }
-
-    // Trouver les données de la semaine
-    const weekData = this.programData.weeks.find(w => w.week === week);
-    if (!weekData) {
-      console.error(`❌ Données introuvables pour semaine ${week}`);
-      container.innerHTML = '<p>Données de la semaine introuvables.</p>';
-      return;
+    
+    // Préparer les données pour le home renderer
+    const weekData = this.programData.getWeek(this.currentWeek);
+    
+    // Convertir la structure pour le renderer
+    const formattedData = {
+      weeks: [{
+        week: this.currentWeek,
+        days: [
+          { ...weekData.dimanche, day: 'dimanche', location: 'Maison' },
+          { ...weekData.mardi, day: 'mardi', location: 'Salle' },
+          { ...weekData.vendredi, day: 'vendredi', location: 'Salle' },
+          { ...weekData.maison, day: 'maison', location: 'Maison' }
+        ]
+      }]
+    };
+    
+    console.log('📊 Données formatées:', formattedData);
+    
+    // Afficher la page d'accueil
+    this.home.render(container, formattedData);
+    
+    // Mettre à jour la navigation
+    this.navigation.updateWeekDisplay(this.currentWeek);
+    this.currentDay = null;
+  }
+  
+  // ====================================================================
+  // SÉLECTION D'UN JOUR
+  // ====================================================================
+  handleDaySelection(dayData) {
+    console.log('📅 Jour sélectionné:', dayData);
+    
+    // Charger la séance
+    this.loadWorkout(this.currentWeek, dayData.day);
+  }
+  
+  // ====================================================================
+  // CHARGER UNE SÉANCE
+  // ====================================================================
+  loadWorkout(week, day) {
+    console.log(`💪 Chargement séance: Semaine ${week}, ${day}`);
+    
+    try {
+      // Récupérer les données de la séance
+      const workout = this.programData.getWorkout(week, day);
+      
+      if (!workout) {
+        console.error('❌ Séance introuvable');
+        return;
+      }
+      
+      // Préparer les données pour le renderer
+      const dayData = {
+        day: day,
+        location: this.getLocation(day),
+        name: workout.name,
+        duration: workout.duration,
+        totalSets: workout.totalSets,
+        exercises: workout.exercises
+      };
+      
+      console.log('📋 Données séance:', dayData);
+      
+      // Afficher la séance
+      const container = document.getElementById('app');
+      this.renderer.render(container, dayData);
+      
+      // Mettre à jour l'état
+      this.currentWeek = week;
+      this.currentDay = day;
+      this.navigation.updateWeekDisplay(week);
+      
+    } catch (error) {
+      console.error('❌ Erreur chargement séance:', error);
     }
-
-    // Trouver les données du jour
-    const dayData = weekData.days.find(d => d.day === day);
-    if (!dayData) {
-      console.error(`❌ Données introuvables pour ${day}`);
-      container.innerHTML = '<p>Aucun entraînement prévu ce jour.</p>';
-      return;
+  }
+  
+  // ====================================================================
+  // HELPER : Déterminer la location
+  // ====================================================================
+  getLocation(day) {
+    if (day === 'dimanche' || day === 'maison') {
+      return 'Maison';
     }
-
-    // Afficher le workout avec le timer connecté
-    console.log('✅ Rendu du workout avec timer connecté');
-    this.renderer.renderWorkout(container, dayData, week, day);
+    return 'Salle';
+  }
+  
+  // ====================================================================
+  // NAVIGATION SEMAINES
+  // ====================================================================
+  nextWeek() {
+    if (this.currentWeek < 26) {
+      this.currentWeek++;
+      if (this.currentDay) {
+        this.loadWorkout(this.currentWeek, this.currentDay);
+      } else {
+        this.showHome();
+      }
+    }
+  }
+  
+  previousWeek() {
+    if (this.currentWeek > 1) {
+      this.currentWeek--;
+      if (this.currentDay) {
+        this.loadWorkout(this.currentWeek, this.currentDay);
+      } else {
+        this.showHome();
+      }
+    }
   }
 }
 
-// Initialiser l'application
-document.addEventListener('DOMContentLoaded', () => {
-  console.log('📱 DOM chargé, démarrage de l\'application...');
-  const app = new App();
-  app.init();
+// ====================================================================
+// INITIALISATION APPLICATION
+// ====================================================================
+document.addEventListener('DOMContentLoaded', async () => {
+  console.log('📱 DOM chargé, démarrage application...');
+  
+  try {
+    // Créer l'instance de l'application
+    window.app = new HybridMasterApp();
+    
+    // Initialiser
+    await window.app.init();
+    
+    console.log('✅ Application démarrée avec succès !');
+    
+  } catch (error) {
+    console.error('❌ Erreur fatale:', error);
+    
+    // Afficher un message d'erreur à l'utilisateur
+    const container = document.getElementById('app');
+    if (container) {
+      container.innerHTML = `
+        <div style="padding: 20px; text-align: center;">
+          <h2>❌ Erreur de chargement</h2>
+          <p>${error.message}</p>
+          <button onclick="location.reload()">Recharger</button>
+        </div>
+      `;
+    }
+  }
 });
