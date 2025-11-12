@@ -67,19 +67,18 @@ class HybridMasterApp {
     }
 
     try {
-      // Récupérer les données de la première semaine
-      const firstWeekData = this.programData.getWeek(this.currentWeek);
-      console.log('📊 Données semaine:', firstWeekData);
+      // Récupérer les données de la semaine
+      const weekData = this.programData.getWeek(this.currentWeek);
+      console.log('📊 Données semaine:', weekData);
       
       // Formatter les données pour le home renderer
       const formattedData = {
         week: this.currentWeek,
-        days: [
-          { ...firstWeekData.dimanche, day: 'dimanche', location: 'Maison' },
-          { ...firstWeekData.mardi, day: 'mardi', location: 'Salle' },
-          { ...firstWeekData.vendredi, day: 'vendredi', location: 'Salle' },
-          { ...firstWeekData.maison, day: 'maison', location: 'Maison' }
-        ]
+        days: weekData.days.map(d => ({
+          ...d,
+          day: d.day,
+          location: d.location || 'Salle'
+        }))
       };
 
       console.log('📋 Données formatées:', formattedData);
