@@ -1,146 +1,131 @@
 /**
  * NAVIGATION UI - Gestion de l'interface de navigation
  */
-
 export class NavigationUI {
-    constructor() {
-        this.currentWeek = 1;
-        this.currentDay = 'dimanche';
-        this.maxWeek = 26;
-        
-        // Éléments DOM
-        this.weekDisplay = document.getElementById('week-display');
-        this.prevWeekBtn = document.getElementById('prev-week');
-        this.nextWeekBtn = document.getElementById('next-week');
-        this.dayTabs = document.querySelectorAll('.day-tab');
-        
-        this.onWeekChange = null;
-        this.onDayChange = null;
+  constructor(onWeekChange, onHomeClick) {
+    this.currentWeek = 1;
+    this.maxWeek = 26;
+    
+    // Callbacks
+    this.onWeekChange = onWeekChange;
+    this.onHomeClick = onHomeClick;
+    
+    console.log('✅ NavigationUI créé');
+    this.init();
+  }
+
+  /**
+   * Initialise les event listeners
+   */
+  init() {
+    // Éléments DOM
+    const prevBtn = document.getElementById('nav-prev-week');
+    const nextBtn = document.getElementById('nav-next-week');
+    const weekLabel = document.getElementById('current-week-label');
+    
+    if (!prevBtn || !nextBtn) {
+      console.error('❌ Boutons de navigation introuvables');
+      return;
     }
 
-    /**
-     * Initialise les event listeners
-     */
-    init() {
-        // Navigation semaines
-        if (this.prevWeekBtn) {
-            this.prevWeekBtn.addEventListener('click', () => this.previousWeek());
+    // Navigation semaines
+    prevBtn.addEventListener('click', () => {
+      console.log('⬅️ Clic sur précédent');
+      this.previousWeek();
+    });
+
+    nextBtn.addEventListener('click', () => {
+      console.log('➡️ Clic sur suivant');
+      this.nextWeek();
+    });
+
+    // Clic sur le label pour retour accueil
+    if (weekLabel) {
+      weekLabel.addEventListener('click', () => {
+        console.log('🏠 Clic sur label semaine');
+        if (this.onHomeClick) {
+          this.onHomeClick();
         }
-        if (this.nextWeekBtn) {
-            this.nextWeekBtn.addEventListener('click', () => this.nextWeek());
-        }
-
-        // Navigation jours
-        this.dayTabs.forEach(tab => {
-            tab.addEventListener('click', (e) => {
-                const day = e.currentTarget.dataset.day;
-                this.selectDay(day);
-            });
-        });
-
-        // Raccourcis clavier
-        document.addEventListener('keydown', (e) => {
-            if (e.key === 'ArrowLeft') this.previousWeek();
-            if (e.key === 'ArrowRight') this.nextWeek();
-        });
-
-        this.updateDisplay();
-        console.log('✅ NavigationUI initialisé');
+      });
+      weekLabel.style.cursor = 'pointer';
     }
 
-    /**
-     * Change de semaine
-     */
-    goToWeek(weekNumber) {
-        if (weekNumber < 1 || weekNumber > this.maxWeek) {
-            console.warn(`⚠️ Semaine ${weekNumber} invalide`);
-            return;
-        }
+    this.updateDisplay();
+    console.log('✅ NavigationUI initialisé');
+  }
 
-        this.currentWeek = weekNumber;
-        this.updateDisplay();
-
-        if (this.onWeekChange) {
-            this.onWeekChange(this.currentWeek, this.currentDay);
-        }
+  /**
+   * Change de semaine
+   */
+  goToWeek(weekNumber) {
+    if (weekNumber < 1 || weekNumber > this.maxWeek) {
+      console.warn(`⚠️ Semaine ${weekNumber} invalide`);
+      return;
     }
 
-    /**
-     * Semaine précédente
-     */
-    previousWeek() {
-        if (this.currentWeek > 1) {
-            this.goToWeek(this.currentWeek - 1);
-        }
+    console.log(`📅 Changement vers semaine ${weekNumber}`);
+    this.currentWeek = weekNumber;
+    this.updateDisplay();
+
+    if (this.onWeekChange) {
+      this.onWeekChange(this.currentWeek);
+    }
+  }
+
+  /**
+   * Semaine précédente
+   */
+  previousWeek() {
+    if (this.currentWeek > 1) {
+      this.goToWeek(this.currentWeek - 1);
+    } else {
+      console.log('⚠️ Déjà à la semaine 1');
+    }
+  }
+
+  /**
+   * Semaine suivante
+   */
+  nextWeek() {
+    if (this.currentWeek < this.maxWeek) {
+      this.goToWeek(this.currentWeek + 1);
+    } else {
+      console.log('⚠️ Déjà à la dernière semaine');
+    }
+  }
+
+  /**
+   * Met à jour l'affichage
+   */
+  updateDisplay() {
+    const weekLabel = document.getElementById('current-week-label');
+    const prevBtn = document.getElementById('nav-prev-week');
+    const nextBtn = document.getElementById('nav-next-week');
+
+    if (weekLabel) {
+      weekLabel.textContent = `Semaine ${this.currentWeek}`;
     }
 
-    /**
-     * Semaine suivante
-     */
-    nextWeek() {
-        if (this.currentWeek < this.maxWeek) {
-            this.goToWeek(this.currentWeek + 1);
-        }
+    // Désactive les boutons si nécessaire
+    if (prevBtn) {
+      prevBtn.disabled = this.currentWeek <= 1;
+      prevBtn.style.opacity = this.currentWeek <= 1 ? '0.3' : '1';
     }
 
-    /**
-     * Sélectionne un jour
-     */
-    selectDay(day) {
-        this.currentDay = day;
-
-        // Update active state
-        this.dayTabs.forEach(tab => {
-            if (tab.dataset.day === day) {
-                tab.classList.add('active');
-            } else {
-                tab.classList.remove('active');
-            }
-        });
-
-        if (this.onDayChange) {
-            this.onDayChange(this.currentWeek, this.currentDay);
-        }
+    if (nextBtn) {
+      nextBtn.disabled = this.currentWeek >= this.maxWeek;
+      nextBtn.style.opacity = this.currentWeek >= this.maxWeek ? '0.3' : '1';
     }
 
-    /**
-     * Met à jour l'affichage
-     */
-    updateDisplay() {
-        if (this.weekDisplay) {
-            const weekInfo = this.weekDisplay.querySelector('.week-info');
-            if (weekInfo) {
-                const weekNumber = weekInfo.querySelector('.week-number');
-                if (weekNumber) {
-                    weekNumber.textContent = `Semaine ${this.currentWeek}`;
-                }
-            }
-        }
+    console.log(`📊 Affichage mis à jour: Semaine ${this.currentWeek}`);
+  }
 
-        // Désactive les boutons si nécessaire
-        if (this.prevWeekBtn) {
-            this.prevWeekBtn.disabled = this.currentWeek <= 1;
-        }
-        if (this.nextWeekBtn) {
-            this.nextWeekBtn.disabled = this.currentWeek >= this.maxWeek;
-        }
-    }
-
-    /**
-     * Récupère l'état actuel
-     */
-    getState() {
-        return {
-            week: this.currentWeek,
-            day: this.currentDay
-        };
-    }
-
-    /**
-     * Restaure un état
-     */
-    setState(week, day) {
-        this.goToWeek(week);
-        this.selectDay(day);
-    }
+  /**
+   * Récupère l'état actuel
+   */
+  getState() {
+    return {
+      week: this.currentWeek
+    };
+  }
 }
