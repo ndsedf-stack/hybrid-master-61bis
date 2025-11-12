@@ -56,9 +56,26 @@ class HybridMasterApp {
         // Vérifier les données
         try {
             const weekData = this.programData.getWeek(this.currentWeek);
-            if (!weekData || !weekData.days) {
-                throw new Error('Données semaine invalides');
+            console.log('🔍 weekData reçu:', weekData);
+            
+            // 🔥 CORRECTION : getWeek() peut retourner directement un objet { week, days }
+            // OU juste un tableau de jours
+            if (!weekData) {
+                throw new Error('Données semaine introuvables');
             }
+            
+            // Si weekData a une propriété 'days', c'est ok
+            if (weekData.days && Array.isArray(weekData.days)) {
+                console.log('✅ Format: { week, days }');
+            } 
+            // Sinon, si weekData est directement un tableau, c'est ok aussi
+            else if (Array.isArray(weekData)) {
+                console.log('✅ Format: tableau de jours direct');
+            } 
+            else {
+                throw new Error('Format de données semaine invalide');
+            }
+            
             console.log('✅ Données programme chargées');
         } catch (error) {
             console.error('❌ Erreur chargement données:', error);
