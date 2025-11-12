@@ -5,12 +5,14 @@
 // IMPORTS
 // ====================================================================
 import programData from './program-data.js';
-import { NavigationUI } from './modules/navigation-ui.js';
+import { NavigationUI } from './ui/navigation-ui.js'; // ← CORRIGÉ : ui/ au lieu de modules/
 import { HomeRenderer } from './modules/home-renderer.js';
-import { WorkoutRenderer } from './modules/workout-renderer.js'; // ← AJOUTÉ
-import { Timer } from './modules/timer.js';
-import { StorageManager } from './modules/storage-manager.js';
-import { ThemeManager } from './modules/theme-manager.js';
+import WorkoutRenderer from './ui/workout-renderer.js'; // ← CORRIGÉ : ui/ et default export
+// Timer et Storage ne sont pas utilisés pour l'instant, on les commente
+// import { TimerManager } from './modules/timer-manager.js';
+// import { LocalStorage } from './modules/local-storage.js';
+// Theme switcher n'est pas nécessaire pour l'instant
+// import { ThemeSwitcher } from './ui/theme-switcher.js';
 
 // ====================================================================
 // APPLICATION PRINCIPALE
