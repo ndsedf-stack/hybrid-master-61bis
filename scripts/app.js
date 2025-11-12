@@ -2,11 +2,11 @@
  * HYBRID MASTER 51 - APPLICATION PRINCIPALE
  */
 
-import { PROGRAM_DATA } from '../data/program-data.js';
+import { PROGRAM_DATA } from '../scripts/program-data.js';
 import WorkoutRenderer from './modules/workout-renderer.js';
 import TimerManager from './modules/timer-manager.js';
-import { NavigationUI } from './core/navigation-ui.js';
-import ThemeSwitcher from './core/theme-switcher.js';
+import { NavigationUI } from './ui/navigation-ui.js';
+import ThemeSwitcher from './ui/theme-switcher.js';
 import { HomeRenderer } from './modules/home-renderer.js';
 
 class App {
