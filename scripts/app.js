@@ -2,12 +2,13 @@
  * HYBRID MASTER 51 - APPLICATION PRINCIPALE
  */
 
-import { PROGRAM_DATA } from '../scripts/program-data.js';
-import WorkoutRenderer from './modules/workout-renderer.js';
-import TimerManager from './modules/timer-manager.js';
-import { NavigationUI } from './ui/navigation-ui.js';
-import ThemeSwitcher from './ui/theme-switcher.js';
-import { HomeRenderer } from './modules/home-renderer.js';
+// ✅ IMPORTS CORRIGÉS selon la structure réelle
+import { PROGRAM_DATA } from './program-data.js';  // Dans scripts/
+import WorkoutRenderer from './ui/workout-renderer.js';  // Dans scripts/ui/
+import TimerManager from './modules/timer-manager.js';  // Dans scripts/modules/
+import { NavigationUI } from './ui/navigation-ui.js';  // Dans scripts/ui/
+import ThemeSwitcher from './ui/theme-switcher.js';  // Dans scripts/ui/
+import { HomeRenderer } from './modules/home-renderer.js';  // Dans scripts/modules/
 
 class App {
   constructor() {
@@ -82,6 +83,11 @@ class App {
       return;
     }
 
+    // 🔍 DEBUG : Vérifier la structure des données
+    console.log('🔍 DEBUG programData:', this.programData);
+    console.log('🔍 DEBUG weeks:', this.programData?.weeks);
+    console.log('🔍 DEBUG firstWeek:', this.programData?.weeks?.[0]);
+
     // Callback quand on sélectionne un jour depuis l'accueil
     this.home.onDaySelect = (day) => {
       const state = this.navigation.getState();
@@ -90,7 +96,9 @@ class App {
     };
 
     // Afficher l'accueil
+    console.log('🏠 Appel de home.render...');
     this.home.render(container, this.programData);
+    console.log('✅ home.render terminé');
   }
 
   showWorkout(week, day) {
