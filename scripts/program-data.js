@@ -967,7 +967,7 @@ export default new ProgramData();
 // EXEMPLE D'UTILISATION
 // ====================================================================
 /*
-import programData from './hybrid_master_51.js';
+import programData from './program-data.js';
 
 // Récupérer une semaine complète
 const week1 = programData.getWeek(1);
