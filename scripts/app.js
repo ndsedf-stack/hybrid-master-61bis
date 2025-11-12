@@ -8,6 +8,7 @@ import programData from './program-data.js';
 import { NavigationUI } from './ui/navigation-ui.js';
 import { HomeRenderer } from './modules/home-renderer.js';
 import WorkoutRenderer from './ui/workout-renderer.js';
+import { TimerManager } from './modules/timer-manager.js';
 
 // ====================================================================
 // APPLICATION PRINCIPALE
@@ -24,14 +25,20 @@ class HybridMasterApp {
     this.navigation = null;
     this.home = null;
     this.workoutRenderer = null;
+    this.timer = null;
   }
 
   async init() {
     try {
       console.log('🔧 Initialisation des modules...');
       
+      // Initialiser le timer
+      this.timer = new TimerManager();
+      console.log('✅ Timer initialisé');
+
       // Initialiser le workout renderer
       this.workoutRenderer = new WorkoutRenderer();
+      this.workoutRenderer.setTimerManager(this.timer);
       console.log('✅ Workout renderer initialisé');
 
       // Initialiser la navigation
