@@ -1,197 +1,124 @@
 // ═══════════════════════════════════════════════════════════
-// 💎 HYBRID MASTER 61 - INTERACTIVE FEATURES
+// 💎 HYBRID MASTER 61 - INTERACTIVE FEATURES V2 COMPATIBLE
 // ═══════════════════════════════════════════════════════════
 
 class WorkoutInteractive {
   constructor() {
     this.timers = new Map();
-    this.editableFields = new Map();
-    this.init();
+    this.supersetStates = new Map();
   }
 
   init() {
+    console.log('💪 Initialisation WorkoutInteractive...');
     this.initEditableStats();
     this.initTimers();
     this.initCheckboxes();
     this.initSupersetTimers();
+    console.log('✅ WorkoutInteractive prêt');
   }
 
   // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-  // 📝 STATS MODIFIABLES
+  // 📝 STATS MODIFIABLES (poids, reps, repos)
   // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
   initEditableStats() {
-    // Rendre tous les stats éditables
-    document.querySelectorAll('.stat-value').forEach(stat => {
-      this.makeEditable(stat);
-    });
-  }
-
-  makeEditable(element) {
-    const statItem = element.closest('.stat-item, .stat');
-    const label = statItem.querySelector('.stat-label');
-    const type = this.getStatType(label?.textContent);
-
-    // Wrapper avec boutons +/-
-    const wrapper = document.createElement('div');
-    wrapper.className = 'editable-stat';
-    
-    const input = document.createElement('input');
-    input.type = 'number';
-    input.value = element.textContent.replace(/[^\d.]/g, '');
-    input.step = type === 'weight' ? '2.5' : '1';
-    input.className = 'stat-value';
-
-    // Boutons de contrôle
-    const controls = document.createElement('div');
-    controls.className = 'stat-controls';
-    controls.innerHTML = `
-      <button class="stat-btn" data-action="decrease">−</button>
-      <button class="stat-btn" data-action="increase">+</button>
-    `;
-
-    wrapper.appendChild(input);
-    wrapper.appendChild(controls);
-    element.replaceWith(wrapper);
-
-    // Events
-    input.addEventListener('focus', () => {
-      wrapper.classList.add('editing');
-      input.select();
-    });
-
-    input.addEventListener('blur', () => {
-      wrapper.classList.remove('editing');
-      this.saveStatValue(input, type);
-    });
-
-    input.addEventListener('keypress', (e) => {
-      if (e.key === 'Enter') {
-        input.blur();
-      }
-    });
-
     // Boutons +/-
-    controls.addEventListener('click', (e) => {
-      const btn = e.target.closest('.stat-btn');
-      if (!btn) return;
+    document.querySelectorAll('.stat-btn').forEach(btn => {
+      btn.addEventListener('click', (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        this.handleStatButton(btn);
+      });
+    });
 
-      const action = btn.dataset.action;
-      const currentValue = parseFloat(input.value) || 0;
-      const step = parseFloat(input.step);
+    // Inputs
+    document.querySelectorAll('.stat-value[type="number"]').forEach(input => {
+      input.addEventListener('change', () => {
+        this.saveStatValue(input);
+      });
 
-      if (action === 'increase') {
-        input.value = (currentValue + step).toFixed(1);
-      } else if (action === 'decrease') {
-        input.value = Math.max(0, currentValue - step).toFixed(1);
-      }
-
-      this.saveStatValue(input, type);
-      this.animateChange(wrapper);
+      input.addEventListener('focus', () => {
+        input.select();
+      });
     });
   }
 
-  getStatType(label) {
-    if (!label) return 'other';
-    const text = label.toLowerCase();
-    if (text.includes('poids') || text.includes('kg')) return 'weight';
-    if (text.includes('reps') || text.includes('répétitions')) return 'reps';
-    if (text.includes('repos') || text.includes('temps')) return 'rest';
-    return 'other';
+  handleStatButton(btn) {
+    const group = btn.closest('.stat-value-group');
+    const input = group.querySelector('.stat-value');
+    const type = btn.dataset.type;
+    const action = btn.classList.contains('stat-plus') ? 'increase' : 'decrease';
+
+    let value = parseFloat(input.value) || 0;
+    const step = parseFloat(input.step) || 1;
+
+    if (action === 'increase') {
+      value += step;
+    } else {
+      value = Math.max(0, value - step);
+    }
+
+    input.value = type === 'weight' ? value.toFixed(1) : Math.round(value);
+    
+    this.saveStatValue(input);
+    this.animateChange(btn);
   }
 
-  saveStatValue(input, type) {
-    const setCard = input.closest('.set-card, .set');
-    const exerciseCard = input.closest('.exercise, .exercise-card');
-    
-    if (!setCard || !exerciseCard) return;
+  saveStatValue(input) {
+    const exerciseCard = input.closest('.exercise-card');
+    if (!exerciseCard) return;
 
     const exerciseId = exerciseCard.dataset.exerciseId;
-    const setId = setCard.dataset.setId;
-    const value = parseFloat(input.value);
+    const type = input.dataset.type;
+    const value = input.value;
 
-    // Sauvegarder dans localStorage
-    const key = `workout_${exerciseId}_${setId}_${type}`;
+    const key = `stat_${exerciseId}_${type}`;
     localStorage.setItem(key, value);
-
-    console.log(`💾 Sauvegardé: ${key} = ${value}`);
+    
+    console.log(`💾 ${key} = ${value}`);
   }
 
   animateChange(element) {
-    element.style.transform = 'scale(1.1)';
+    element.style.transform = 'scale(1.2)';
     setTimeout(() => {
       element.style.transform = 'scale(1)';
-    }, 200);
+    }, 150);
   }
 
   // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-  // ⏱️ TIMER CIRCULAIRE ANIMÉ
+  // ⏱️ TIMERS CIRCULAIRES ANIMÉS
   // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
   initTimers() {
-    document.querySelectorAll('.set-card, .set').forEach(setCard => {
-      const restTime = parseInt(setCard.dataset.rest) || 60;
-      this.createTimer(setCard, restTime);
+    // Timers individuels dans les sets (hors superset)
+    document.querySelectorAll('.set-card .timer-circular').forEach(timer => {
+      this.setupTimer(timer, 'individual');
     });
   }
 
-  createTimer(setCard, duration) {
-    const timerId = setCard.dataset.setId || `timer_${Date.now()}`;
-    
-    // Trouver ou créer le conteneur timer
-    let timerContainer = setCard.querySelector('.timer-container');
-    if (!timerContainer) {
-      timerContainer = this.createTimerHTML(duration);
-      setCard.appendChild(timerContainer);
-    }
+  setupTimer(timerEl, type = 'individual') {
+    const duration = parseInt(timerEl.dataset.duration) || 60;
+    const timerId = `timer_${Date.now()}_${Math.random()}`;
+
+    timerEl.dataset.timerId = timerId;
 
     const timer = {
+      id: timerId,
+      element: timerEl,
       duration,
       remaining: duration,
       isActive: false,
       interval: null,
-      container: timerContainer
+      type
     };
 
     this.timers.set(timerId, timer);
 
-    // Event click pour démarrer/pause
-    timerContainer.addEventListener('click', () => {
+    // Click pour démarrer/pause
+    timerEl.addEventListener('click', (e) => {
+      e.stopPropagation();
       this.toggleTimer(timerId);
     });
-  }
-
-  createTimerHTML(duration) {
-    const container = document.createElement('div');
-    container.className = 'timer-container';
-    
-    const radius = 52;
-    const circumference = 2 * Math.PI * radius;
-
-    container.innerHTML = `
-      <div class="timer-circle">
-        <svg viewBox="0 0 120 120">
-          <defs>
-            <linearGradient id="timerGradient" x1="0%" y1="0%" x2="100%" y2="100%">
-              <stop offset="0%" style="stop-color:#FF9F0A;stop-opacity:1" />
-              <stop offset="100%" style="stop-color:#FFB340;stop-opacity:1" />
-            </linearGradient>
-          </defs>
-          <circle class="timer-circle-bg" cx="60" cy="60" r="${radius}"></circle>
-          <circle 
-            class="timer-circle-progress" 
-            cx="60" 
-            cy="60" 
-            r="${radius}"
-            stroke-dasharray="${circumference}"
-            stroke-dashoffset="0"
-          ></circle>
-        </svg>
-        <div class="timer-text">${this.formatTime(duration)}</div>
-      </div>
-    `;
-
-    return container;
   }
 
   toggleTimer(timerId) {
@@ -210,35 +137,40 @@ class WorkoutInteractive {
     if (!timer || timer.isActive) return;
 
     timer.isActive = true;
-    timer.container.classList.add('active');
+    timer.element.classList.add('active');
 
-    const progressCircle = timer.container.querySelector('.timer-circle-progress');
-    const textElement = timer.container.querySelector('.timer-text');
-    const radius = 52;
+    const progressCircle = timer.element.querySelector('.timer-progress');
+    const textValue = timer.element.querySelector('.timer-value');
+    
+    if (!progressCircle || !textValue) return;
+
+    const radius = timer.type === 'superset' ? 52 : 35;
     const circumference = 2 * Math.PI * radius;
 
     timer.interval = setInterval(() => {
       timer.remaining--;
 
-      // Update text
-      textElement.textContent = this.formatTime(timer.remaining);
+      // Update texte
+      textValue.textContent = this.formatTime(timer.remaining);
 
-      // Update circle progress
+      // Update cercle
       const progress = timer.remaining / timer.duration;
       const offset = circumference * (1 - progress);
       progressCircle.style.strokeDashoffset = offset;
 
-      // Change color when < 10s
+      // Alerte rouge < 10s
       if (timer.remaining <= 10) {
         progressCircle.style.stroke = '#FF453A';
-        textElement.style.color = '#FF453A';
+        textValue.style.color = '#FF453A';
       }
 
-      // Timer finished
+      // Fin
       if (timer.remaining <= 0) {
         this.finishTimer(timerId);
       }
     }, 1000);
+
+    console.log(`⏱️ Timer démarré: ${timerId}`);
   }
 
   pauseTimer(timerId) {
@@ -246,12 +178,14 @@ class WorkoutInteractive {
     if (!timer) return;
 
     timer.isActive = false;
-    timer.container.classList.remove('active');
-    
+    timer.element.classList.remove('active');
+
     if (timer.interval) {
       clearInterval(timer.interval);
       timer.interval = null;
     }
+
+    console.log(`⏸️ Timer en pause: ${timerId}`);
   }
 
   finishTimer(timerId) {
@@ -259,21 +193,23 @@ class WorkoutInteractive {
     if (!timer) return;
 
     this.pauseTimer(timerId);
-    
-    // Vibration + son
+
+    // Vibration
     if (navigator.vibrate) {
-      navigator.vibrate([200, 100, 200]);
+      navigator.vibrate([200, 100, 200, 100, 200]);
     }
 
-    // Animation finale
-    timer.container.classList.add('finished');
-    setTimeout(() => {
-      timer.container.classList.remove('finished');
-      this.resetTimer(timerId);
-    }, 2000);
-
+    // Animation
+    timer.element.classList.add('finished');
+    
     // Notification
     this.showNotification('⏰ Repos terminé !');
+
+    // Reset après 2s
+    setTimeout(() => {
+      timer.element.classList.remove('finished');
+      this.resetTimer(timerId);
+    }, 2000);
   }
 
   resetTimer(timerId) {
@@ -282,14 +218,16 @@ class WorkoutInteractive {
 
     timer.remaining = timer.duration;
     timer.isActive = false;
-    
-    const textElement = timer.container.querySelector('.timer-text');
-    const progressCircle = timer.container.querySelector('.timer-circle-progress');
-    
-    textElement.textContent = this.formatTime(timer.duration);
-    progressCircle.style.strokeDashoffset = '0';
-    progressCircle.style.stroke = 'url(#timerGradient)';
-    textElement.style.color = '#ffffff';
+
+    const progressCircle = timer.element.querySelector('.timer-progress');
+    const textValue = timer.element.querySelector('.timer-value');
+
+    if (progressCircle && textValue) {
+      textValue.textContent = this.formatTime(timer.duration);
+      progressCircle.style.strokeDashoffset = '0';
+      progressCircle.style.stroke = 'url(#timerGradient)';
+      textValue.style.color = '#ffffff';
+    }
   }
 
   formatTime(seconds) {
@@ -299,11 +237,11 @@ class WorkoutInteractive {
   }
 
   // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-  // ✓ CHECKBOXES / VALIDATION SÉRIES
+  // ✓ CHECKBOXES - VALIDATION DES SÉRIES
   // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
   initCheckboxes() {
-    document.querySelectorAll('.check-button, .checkbox, .validate-btn').forEach(btn => {
+    document.querySelectorAll('.set-check').forEach(btn => {
       btn.addEventListener('click', (e) => {
         e.stopPropagation();
         this.toggleCheck(btn);
@@ -312,39 +250,47 @@ class WorkoutInteractive {
   }
 
   toggleCheck(button) {
-    const setCard = button.closest('.set-card, .set');
-    const isChecked = button.classList.contains('checked');
+    const setCard = button.closest('.set-card');
+    if (!setCard) return;
+
+    const isChecked = setCard.classList.contains('completed');
 
     if (isChecked) {
-      button.classList.remove('checked');
+      // Décocher
       setCard.classList.remove('completed');
-      button.innerHTML = '';
+      button.querySelector('.check-icon').textContent = '';
     } else {
-      button.classList.add('checked');
+      // Cocher
       setCard.classList.add('completed');
-      button.innerHTML = '✓';
-      
-      // Démarrer le timer automatiquement
-      const timerId = setCard.dataset.setId;
-      if (timerId && this.timers.has(timerId)) {
-        setTimeout(() => {
-          this.startTimer(timerId);
-        }, 500);
-      }
+      button.querySelector('.check-icon').textContent = '✓';
 
       // Animation
       this.animateCompletion(setCard);
+
+      // Démarrer timer (si pas dans superset)
+      const timer = setCard.querySelector('.timer-circular');
+      if (timer && timer.dataset.timerId) {
+        setTimeout(() => {
+          this.startTimer(timer.dataset.timerId);
+        }, 500);
+      }
+
+      // Check si c'est dans un superset
+      const supersetGroup = setCard.closest('.superset-group');
+      if (supersetGroup) {
+        this.checkSupersetCompletion(supersetGroup);
+      }
     }
 
-    // Sauvegarder l'état
+    // Sauvegarder
     this.saveCheckState(setCard, !isChecked);
   }
 
   animateCompletion(setCard) {
-    setCard.style.transform = 'scale(1.02)';
+    setCard.style.transform = 'scale(1.03)';
     setTimeout(() => {
       setCard.style.transform = 'scale(1)';
-    }, 300);
+    }, 200);
   }
 
   saveCheckState(setCard, isChecked) {
@@ -360,76 +306,88 @@ class WorkoutInteractive {
 
   initSupersetTimers() {
     document.querySelectorAll('.superset-group').forEach(group => {
-      const exercises = group.querySelectorAll('.exercise, .exercise-card');
+      const supersetTimer = group.querySelector('.superset-timer-wrapper .timer-circular');
       
-      if (exercises.length < 2) return;
-
-      // Récupérer le temps de repos (depuis dataset ou défaut)
-      const restTime = parseInt(group.dataset.rest) || 90;
-
-      // Créer UN SEUL timer pour le superset
-      const supersetTimerId = `superset_${Date.now()}`;
-      const timerContainer = this.createTimerHTML(restTime);
-      timerContainer.classList.add('superset-timer');
-      
-      // Insérer le timer après le label du superset
-      const label = group.querySelector('.superset-label');
-      if (label) {
-        label.after(timerContainer);
-      } else {
-        group.insertBefore(timerContainer, group.firstChild);
+      if (supersetTimer) {
+        this.setupTimer(supersetTimer, 'superset');
+        
+        // Init state
+        const groupId = `superset_${Date.now()}`;
+        group.dataset.supersetId = groupId;
+        
+        this.supersetStates.set(groupId, {
+          exercise1Complete: false,
+          exercise2Complete: false,
+          currentSet: 1
+        });
       }
-
-      // Enregistrer le timer
-      this.timers.set(supersetTimerId, {
-        duration: restTime,
-        remaining: restTime,
-        isActive: false,
-        interval: null,
-        container: timerContainer
-      });
-
-      // Click sur timer
-      timerContainer.addEventListener('click', () => {
-        this.toggleTimer(supersetTimerId);
-      });
-
-      // Démarrer auto quand les 2 exercices sont validés
-      this.watchSupersetCompletion(group, supersetTimerId);
     });
   }
 
-  watchSupersetCompletion(group, timerId) {
-    const checkButtons = group.querySelectorAll('.check-button, .checkbox, .validate-btn');
+  checkSupersetCompletion(supersetGroup) {
+    const groupId = supersetGroup.dataset.supersetId;
+    if (!groupId) return;
+
+    // Compter les sets complétés dans chaque exercice
+    const exercises = supersetGroup.querySelectorAll('.superset-item');
+    if (exercises.length !== 2) return;
+
+    const currentSetNumber = this.getCurrentSetNumber(supersetGroup);
     
-    checkButtons.forEach(btn => {
-      btn.addEventListener('click', () => {
+    const ex1Sets = exercises[0].querySelectorAll('.set-card');
+    const ex2Sets = exercises[1].querySelectorAll('.set-card');
+
+    const ex1CurrentComplete = ex1Sets[currentSetNumber - 1]?.classList.contains('completed');
+    const ex2CurrentComplete = ex2Sets[currentSetNumber - 1]?.classList.contains('completed');
+
+    console.log(`🔗 Superset check: Ex1=${ex1CurrentComplete}, Ex2=${ex2CurrentComplete}`);
+
+    // Si les 2 exercices de la série actuelle sont validés
+    if (ex1CurrentComplete && ex2CurrentComplete) {
+      console.log('✅ Superset série complète ! Démarrage timer...');
+      
+      // Démarrer le timer du superset
+      const supersetTimer = supersetGroup.querySelector('.superset-timer-wrapper .timer-circular');
+      if (supersetTimer && supersetTimer.dataset.timerId) {
         setTimeout(() => {
-          const allChecked = Array.from(checkButtons).every(b => 
-            b.classList.contains('checked')
-          );
+          this.startTimer(supersetTimer.dataset.timerId);
+        }, 800);
+      }
 
-          if (allChecked) {
-            // Tous les exercices du superset sont validés
-            setTimeout(() => {
-              this.startTimer(timerId);
-            }, 500);
+      // Reset les checkboxes après démarrage du timer
+      setTimeout(() => {
+        ex1Sets[currentSetNumber - 1]?.classList.remove('completed');
+        ex2Sets[currentSetNumber - 1]?.classList.remove('completed');
+        
+        const check1 = ex1Sets[currentSetNumber - 1]?.querySelector('.check-icon');
+        const check2 = ex2Sets[currentSetNumber - 1]?.querySelector('.check-icon');
+        
+        if (check1) check1.textContent = '';
+        if (check2) check2.textContent = '';
+      }, 1200);
+    }
+  }
 
-            // Reset les checks pour la série suivante
-            setTimeout(() => {
-              checkButtons.forEach(b => {
-                b.classList.remove('checked');
-                b.innerHTML = '';
-                const setCard = b.closest('.set-card, .set');
-                if (setCard) {
-                  setCard.classList.remove('completed');
-                }
-              });
-            }, 1000);
-          }
-        }, 100);
-      });
-    });
+  getCurrentSetNumber(supersetGroup) {
+    // Déterminer quelle série est en cours
+    const allSets = supersetGroup.querySelectorAll('.set-card');
+    const totalSets = allSets.length / 2; // 2 exercices
+
+    for (let i = 1; i <= totalSets; i++) {
+      const setIndex = i - 1;
+      const ex1Set = allSets[setIndex];
+      const ex2Set = allSets[setIndex + totalSets];
+
+      const ex1Complete = ex1Set?.classList.contains('completed');
+      const ex2Complete = ex2Set?.classList.contains('completed');
+
+      // Si l'un des deux n'est pas complété, c'est la série en cours
+      if (!ex1Complete || !ex2Complete) {
+        return i;
+      }
+    }
+
+    return totalSets; // Dernière série
   }
 
   // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
@@ -437,32 +395,32 @@ class WorkoutInteractive {
   // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
   showNotification(message) {
-    // Vérifier si le navigateur supporte les notifications
+    // Notification native si autorisée
     if ('Notification' in window && Notification.permission === 'granted') {
       new Notification('Hybrid Master 61', {
         body: message,
-        icon: '/favicon.ico',
-        badge: '/favicon.ico'
+        icon: '/favicon.ico'
       });
     }
 
-    // Toast UI fallback
+    // Toast UI
     const toast = document.createElement('div');
     toast.className = 'toast-notification';
     toast.textContent = message;
     toast.style.cssText = `
       position: fixed;
-      bottom: 20px;
+      bottom: 100px;
       left: 50%;
       transform: translateX(-50%);
-      background: rgba(48, 209, 88, 0.9);
+      background: rgba(48, 209, 88, 0.95);
       backdrop-filter: blur(20px);
       color: white;
-      padding: 16px 24px;
-      border-radius: 20px;
-      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+      padding: 16px 32px;
+      border-radius: 24px;
+      box-shadow: 0 10px 40px rgba(0, 0, 0, 0.4);
       z-index: 10000;
       font-weight: 600;
+      font-size: 15px;
       animation: slideUp 0.3s ease;
     `;
 
@@ -475,89 +433,83 @@ class WorkoutInteractive {
   }
 
   // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-  // 🔄 UTILITAIRES
+  // 💾 SAUVEGARDE / CHARGEMENT
   // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
   loadSavedData() {
-    // Charger tous les états sauvegardés
-    document.querySelectorAll('.set-card, .set').forEach(setCard => {
+    // Charger les checkboxes
+    document.querySelectorAll('.set-card').forEach(setCard => {
       const setId = setCard.dataset.setId;
       if (!setId) return;
 
-      // Charger état checkbox
       const isChecked = localStorage.getItem(`check_${setId}`) === 'true';
       if (isChecked) {
-        const checkbox = setCard.querySelector('.check-button, .checkbox');
-        if (checkbox) {
-          checkbox.classList.add('checked');
-          checkbox.innerHTML = '✓';
-          setCard.classList.add('completed');
-        }
+        setCard.classList.add('completed');
+        const checkIcon = setCard.querySelector('.check-icon');
+        if (checkIcon) checkIcon.textContent = '✓';
       }
-
-      // Charger valeurs stats
-      setCard.querySelectorAll('input[type="number"]').forEach(input => {
-        const type = this.getStatType(
-          input.closest('.stat-item, .stat')?.querySelector('.stat-label')?.textContent
-        );
-        const exerciseId = setCard.closest('.exercise, .exercise-card')?.dataset.exerciseId;
-        const key = `workout_${exerciseId}_${setId}_${type}`;
-        const saved = localStorage.getItem(key);
-        if (saved) {
-          input.value = saved;
-        }
-      });
     });
+
+    // Charger les stats
+    document.querySelectorAll('.stat-value[type="number"]').forEach(input => {
+      const exerciseCard = input.closest('.exercise-card');
+      if (!exerciseCard) return;
+
+      const exerciseId = exerciseCard.dataset.exerciseId;
+      const type = input.dataset.type;
+      const key = `stat_${exerciseId}_${type}`;
+      const saved = localStorage.getItem(key);
+
+      if (saved) {
+        input.value = saved;
+      }
+    });
+
+    console.log('💾 Données chargées depuis localStorage');
   }
-
-  resetWorkout() {
-    if (!confirm('Réinitialiser toutes les données de cette séance ?')) return;
-
-    // Clear localStorage
-    const keys = Object.keys(localStorage).filter(k => 
-      k.startsWith('workout_') || k.startsWith('check_')
-    );
-    keys.forEach(key => localStorage.removeItem(key));
-
-    // Reset UI
-    location.reload();
-  }
-
-  // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-  // 📱 DEMANDER PERMISSIONS
-  // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
   requestNotificationPermission() {
     if ('Notification' in window && Notification.permission === 'default') {
-      Notification.requestPermission();
+      Notification.requestPermission().then(permission => {
+        console.log('🔔 Permission notifications:', permission);
+      });
     }
   }
 }
 
 // ═══════════════════════════════════════════════════════════
-// 🚀 INITIALISATION
+// 🚀 INITIALISATION GLOBALE
 // ═══════════════════════════════════════════════════════════
 
-let workoutApp;
+let workoutApp = null;
 
-document.addEventListener('DOMContentLoaded', () => {
+// Auto-init quand le DOM est prêt
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', initWorkoutApp);
+} else {
+  initWorkoutApp();
+}
+
+function initWorkoutApp() {
   workoutApp = new WorkoutInteractive();
-  workoutApp.loadSavedData();
   workoutApp.requestNotificationPermission();
-
+  
+  // Exposer globalement
+  window.workoutApp = workoutApp;
+  
   console.log('💪 Hybrid Master 61 - Interactive Mode Activé');
-});
+}
 
-// Export pour utilisation externe
+// Export pour modules
 if (typeof module !== 'undefined' && module.exports) {
   module.exports = WorkoutInteractive;
 }
 
 // ═══════════════════════════════════════════════════════════
-// 🎨 STYLES CSS ADDITIONNELS (à ajouter dans <style>)
+// 🎨 STYLES CSS ANIMATIONS
 // ═══════════════════════════════════════════════════════════
 
-const additionalStyles = `
+const styles = `
 @keyframes slideUp {
   from { transform: translateX(-50%) translateY(20px); opacity: 0; }
   to { transform: translateX(-50%) translateY(0); opacity: 1; }
@@ -568,34 +520,42 @@ const additionalStyles = `
   to { transform: translateX(-50%) translateY(20px); opacity: 0; }
 }
 
-.timer-container.active .timer-circle-progress {
-  animation: pulse 1s ease-in-out infinite;
+.timer-circular.active .timer-progress {
+  animation: timerPulse 1.5s ease-in-out infinite;
 }
 
-@keyframes pulse {
-  0%, 100% { filter: drop-shadow(0 0 10px rgba(255, 159, 10, 0.5)); }
-  50% { filter: drop-shadow(0 0 20px rgba(255, 159, 10, 0.8)); }
+@keyframes timerPulse {
+  0%, 100% { filter: drop-shadow(0 0 8px rgba(255, 159, 10, 0.6)); }
+  50% { filter: drop-shadow(0 0 16px rgba(255, 159, 10, 0.9)); }
 }
 
-.timer-container.finished {
-  animation: bounce 0.5s ease;
+.timer-circular.finished {
+  animation: timerBounce 0.6s ease;
 }
 
-@keyframes bounce {
+@keyframes timerBounce {
   0%, 100% { transform: scale(1); }
-  50% { transform: scale(1.1); }
+  50% { transform: scale(1.15); }
 }
 
-.superset-timer {
-  width: 100px;
-  height: 100px;
-  margin: 16px auto;
+.set-card.completed {
+  background: rgba(48, 209, 88, 0.1);
+  border-color: rgba(48, 209, 88, 0.4);
+}
+
+.set-check .check-icon {
+  transition: all 0.2s ease;
+}
+
+.set-card.completed .check-icon {
+  color: #30D158;
+  font-size: 18px;
 }
 `;
 
-// Inject styles
+// Injecter les styles
 if (typeof document !== 'undefined') {
   const styleEl = document.createElement('style');
-  styleEl.textContent = additionalStyles;
+  styleEl.textContent = styles;
   document.head.appendChild(styleEl);
 }
