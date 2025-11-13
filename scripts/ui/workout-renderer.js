@@ -2,7 +2,6 @@
 // WORKOUT RENDERER - Affichage des séances AVEC TIMER
 // Compatible avec program-data.js
 // ==================================================================
-
 export class WorkoutRenderer {
     constructor(container, onBack) {
         this.container = container;
@@ -24,7 +23,7 @@ export class WorkoutRenderer {
             return;
         }
         
-        const { day, location, exercises } = dayData;
+        const { day, name, location, exercises } = dayData;
         
         this.container.innerHTML = `
             <div class="workout-view">
@@ -35,8 +34,9 @@ export class WorkoutRenderer {
                 
                 <div class="workout-header">
                     <div class="workout-title">
-                        <span class="workout-day">${day}</span>
-                        <span class="workout-location">${location}</span>
+                        <h2 class="workout-day">${day || 'Jour'}</h2>
+                        <p class="workout-name">${name || 'Entraînement'}</p>
+                        <span class="workout-location">📍 ${location || 'Maison'}</span>
                     </div>
                     <div class="workout-week">Semaine ${weekNumber}</div>
                 </div>
