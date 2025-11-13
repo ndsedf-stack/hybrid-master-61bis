@@ -5,6 +5,7 @@
 import programData from './program-data.js';
 import { HomeRenderer } from './modules/home-renderer.js';
 import { WorkoutRenderer } from './ui/workout-renderer.js';
+import TimerManager from './modules/timer-manager.js';
 
 class HybridMasterApp {
   constructor() {
@@ -12,12 +13,15 @@ class HybridMasterApp {
     this.currentView = 'home';
     this.currentDay = null;
     
-    // Initialisation des renderers seulement
+    // Initialisation des renderers
     this.homeRenderer = new HomeRenderer('content', this.handleDaySelected.bind(this));
     this.workoutRenderer = new WorkoutRenderer(
       document.getElementById('content'),
       this.handleBackToHome.bind(this)
     );
+    
+    // Initialisation du TimerManager
+    this.timerManager = new TimerManager();
     
     console.log('✅ App initialisée');
   }
@@ -33,6 +37,12 @@ class HybridMasterApp {
       }
       
       console.log('✅ Données chargées:', week1);
+      
+      // Initialiser le TimerManager
+      this.timerManager.init();
+      
+      // Connecter le timer au WorkoutRenderer
+      this.workoutRenderer.setTimerManager(this.timerManager);
       
       // Configuration de la navigation
       this.setupNavigation();
@@ -135,7 +145,6 @@ class HybridMasterApp {
         days: daysArray
       };
 
-      // ✅ CORRECTION : On passe formattedWeekData directement (pas contentElement en premier)
       contentElement.innerHTML = this.homeRenderer.render(formattedWeekData);
       
       // Attache les écouteurs d'événements aux cartes
@@ -218,7 +227,6 @@ class HybridMasterApp {
     }
   }
 
-  // ✅ NOUVELLE MÉTHODE pour être appelée par window.startWorkout
   startWorkout(day) {
     console.log('🏋️ startWorkout appelé pour:', day);
     this.handleDaySelected(day.toLowerCase());
@@ -237,7 +245,7 @@ document.addEventListener('DOMContentLoaded', () => {
     window.app = app;
     console.log('✅ App exposée dans window.app');
     
-    // ✅ AJOUT : Exposition de startWorkout pour les boutons onclick
+    // Exposition de startWorkout pour les boutons onclick
     window.startWorkout = function(day) {
       console.log('🏋️ window.startWorkout appelé:', day);
       if (window.app) {
