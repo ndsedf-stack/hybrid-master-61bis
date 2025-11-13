@@ -1,5 +1,5 @@
 // ==================================================================
-// APP.JS - VERSION CORRIGÉE
+// APP.JS - VERSION COMPLÈTE CORRIGÉE
 // ==================================================================
 
 import programData from './program-data.js';
@@ -112,7 +112,11 @@ class HybridMasterApp {
         const workout = weekData[day];
         return {
           day: day.charAt(0).toUpperCase() + day.slice(1),
-          data: workout
+          name: workout?.name || 'Entraînement',
+          duration: workout?.duration || 60,
+          exercises: workout?.exercises || [],
+          block: weekData.block,
+          tempo: weekData.technique
         };
       });
 
@@ -131,8 +135,8 @@ class HybridMasterApp {
         days: daysArray
       };
 
-      // ✅ CORRECTION ICI : On passe formattedWeekData en PREMIER, pas contentElement
-      contentElement.innerHTML = this.homeRenderer.render(formattedWeekData, contentElement);
+      // ✅ CORRECTION : On passe formattedWeekData directement (pas contentElement en premier)
+      contentElement.innerHTML = this.homeRenderer.render(formattedWeekData);
       
       // Attache les écouteurs d'événements aux cartes
       this.attachHomeEventListeners();
@@ -147,7 +151,7 @@ class HybridMasterApp {
 
   attachHomeEventListeners() {
     // Écouteurs pour les boutons "COMMENCER" des cartes
-    const startButtons = document.querySelectorAll('.workout-card-start');
+    const startButtons = document.querySelectorAll('.card-button');
     console.log(`🔘 ${startButtons.length} boutons COMMENCER trouvés`);
     
     startButtons.forEach(btn => {
@@ -213,6 +217,12 @@ class HybridMasterApp {
       `;
     }
   }
+
+  // ✅ NOUVELLE MÉTHODE pour être appelée par window.startWorkout
+  startWorkout(day) {
+    console.log('🏋️ startWorkout appelé pour:', day);
+    this.handleDaySelected(day.toLowerCase());
+  }
 }
 
 // Initialisation au chargement du DOM
@@ -226,6 +236,18 @@ document.addEventListener('DOMContentLoaded', () => {
     // Exposition globale pour le debug
     window.app = app;
     console.log('✅ App exposée dans window.app');
+    
+    // ✅ AJOUT : Exposition de startWorkout pour les boutons onclick
+    window.startWorkout = function(day) {
+      console.log('🏋️ window.startWorkout appelé:', day);
+      if (window.app) {
+        window.app.startWorkout(day);
+      } else {
+        console.error('❌ App non disponible');
+      }
+    };
+    console.log('✅ window.startWorkout exposée');
+    
   } catch (error) {
     console.error('❌ Erreur fatale:', error);
     const contentElement = document.getElementById('content');
