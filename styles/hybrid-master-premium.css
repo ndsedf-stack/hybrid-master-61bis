@@ -1,0 +1,669 @@
+/* ═══════════════════════════════════════════════════════════
+   💎 HYBRID MASTER 61 - PREMIUM iOS 18 DESIGN
+   ═══════════════════════════════════════════════════════════ */
+
+/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+   🌑 BASE & BACKGROUND
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+
+body {
+  background: linear-gradient(180deg, #0a0a0a 0%, #1a1a1a 50%, #0f0f0f 100%);
+  min-height: 100vh;
+  color: #ffffff;
+  font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", sans-serif;
+}
+
+.container {
+  max-width: 440px;
+  margin: 0 auto;
+  padding: 16px;
+}
+
+/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+   📱 HEADER - Glass Morphism Premium
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+
+.workout-header,
+.session-header,
+.page-header {
+  background: rgba(28, 28, 30, 0.85);
+  backdrop-filter: blur(40px) saturate(180%);
+  -webkit-backdrop-filter: blur(40px) saturate(180%);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 20px;
+  padding: 20px;
+  margin-bottom: 16px;
+  box-shadow: 
+    0 8px 32px rgba(0, 0, 0, 0.5),
+    0 0 0 1px rgba(255, 255, 255, 0.03),
+    inset 0 1px 0 rgba(255, 255, 255, 0.08);
+}
+
+.workout-header h1,
+.workout-header h2,
+.session-title {
+  color: #ffffff;
+  font-size: 28px;
+  font-weight: 700;
+  margin: 0 0 8px 0;
+  letter-spacing: -0.5px;
+  text-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+}
+
+.workout-subtitle,
+.session-subtitle {
+  color: rgba(255, 255, 255, 0.65);
+  font-size: 15px;
+  font-weight: 500;
+  margin: 0 0 16px 0;
+}
+
+/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+   🏷️ BADGES - iOS Pills
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+
+.badge,
+.block-badge,
+.tempo-badge,
+.technique-badge,
+.rpe-badge {
+  background: rgba(60, 60, 67, 0.6);
+  backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  color: rgba(255, 255, 255, 0.85);
+  padding: 6px 14px;
+  border-radius: 20px;
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 0.2px;
+  display: inline-block;
+  margin: 4px;
+  box-shadow: 
+    0 2px 8px rgba(0, 0, 0, 0.2),
+    inset 0 1px 0 rgba(255, 255, 255, 0.1);
+}
+
+.badge.primary,
+.block-badge {
+  background: linear-gradient(135deg, rgba(0, 122, 255, 0.3), rgba(10, 132, 255, 0.3));
+  border: 1px solid rgba(0, 122, 255, 0.4);
+  color: #5AC8FA;
+  box-shadow: 
+    0 4px 12px rgba(0, 122, 255, 0.3),
+    0 0 20px rgba(0, 122, 255, 0.15),
+    inset 0 1px 0 rgba(255, 255, 255, 0.2);
+}
+
+.badge.purple,
+.tempo-badge {
+  background: linear-gradient(135deg, rgba(175, 82, 222, 0.3), rgba(191, 90, 242, 0.3));
+  border: 1px solid rgba(175, 82, 222, 0.4);
+  color: #BF5AF2;
+  box-shadow: 
+    0 4px 12px rgba(175, 82, 222, 0.3),
+    0 0 20px rgba(175, 82, 222, 0.15);
+}
+
+.badge.yellow,
+.rpe-badge {
+  background: linear-gradient(135deg, rgba(255, 214, 10, 0.25), rgba(255, 224, 64, 0.25));
+  border: 1px solid rgba(255, 214, 10, 0.4);
+  color: #FFD60A;
+  box-shadow: 
+    0 3px 10px rgba(255, 214, 10, 0.25),
+    0 0 20px rgba(255, 214, 10, 0.1);
+}
+
+.badge.orange,
+.technique-badge {
+  background: linear-gradient(135deg, rgba(255, 159, 10, 0.3), rgba(255, 179, 64, 0.3));
+  border: 1px solid rgba(255, 159, 10, 0.4);
+  color: #FFB340;
+  box-shadow: 
+    0 4px 12px rgba(255, 159, 10, 0.3),
+    0 0 20px rgba(255, 159, 10, 0.15);
+}
+
+/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+   💪 EXERCISE CARD - Premium Glass
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+
+.exercise,
+.exercise-card {
+  background: rgba(28, 28, 30, 0.85);
+  backdrop-filter: blur(40px) saturate(180%);
+  -webkit-backdrop-filter: blur(40px) saturate(180%);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 20px;
+  padding: 20px;
+  margin-bottom: 16px;
+  box-shadow: 
+    0 8px 32px rgba(0, 0, 0, 0.5),
+    0 0 0 1px rgba(255, 255, 255, 0.03),
+    inset 0 1px 0 rgba(255, 255, 255, 0.08);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  animation: fadeInUp 0.5s cubic-bezier(0.4, 0, 0.2, 1) backwards;
+}
+
+.exercise:hover,
+.exercise-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 
+    0 12px 48px rgba(0, 0, 0, 0.6),
+    0 0 0 1px rgba(255, 255, 255, 0.05);
+}
+
+.exercise-name,
+.exercise-title {
+  color: #ffffff;
+  font-size: 22px;
+  font-weight: 700;
+  margin: 0 0 16px 0;
+  letter-spacing: -0.3px;
+  text-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+}
+
+/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+   🎯 SET CARD - iOS Material
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+
+.set,
+.set-card {
+  background: rgba(44, 44, 46, 0.7);
+  backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 16px;
+  padding: 16px;
+  margin-bottom: 12px;
+  box-shadow: 
+    0 4px 16px rgba(0, 0, 0, 0.3),
+    inset 0 1px 0 rgba(255, 255, 255, 0.08);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.set:hover,
+.set-card:hover {
+  background: rgba(48, 48, 50, 0.8);
+  border-color: rgba(255, 255, 255, 0.15);
+  transform: scale(1.01);
+}
+
+.set.completed,
+.set-card.completed {
+  background: rgba(48, 209, 88, 0.15);
+  border: 1px solid rgba(48, 209, 88, 0.3);
+  box-shadow: 
+    0 4px 20px rgba(48, 209, 88, 0.2),
+    0 0 30px rgba(48, 209, 88, 0.1),
+    inset 0 1px 0 rgba(48, 209, 88, 0.2);
+}
+
+.set-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 14px;
+}
+
+.set-number {
+  color: #ffffff;
+  font-size: 17px;
+  font-weight: 700;
+  letter-spacing: -0.2px;
+}
+
+/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+   ⏱️ TIMER CIRCULAIRE - Comme Image 4
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+
+.timer-container {
+  position: relative;
+  width: 120px;
+  height: 120px;
+  margin: 20px auto;
+}
+
+.timer-circle {
+  width: 100%;
+  height: 100%;
+  position: relative;
+}
+
+.timer-circle svg {
+  transform: rotate(-90deg);
+  width: 100%;
+  height: 100%;
+}
+
+.timer-circle-bg {
+  fill: none;
+  stroke: rgba(60, 60, 67, 0.3);
+  stroke-width: 8;
+}
+
+.timer-circle-progress {
+  fill: none;
+  stroke: url(#timerGradient);
+  stroke-width: 8;
+  stroke-linecap: round;
+  transition: stroke-dashoffset 1s linear;
+}
+
+.timer-text {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-size: 32px;
+  font-weight: 700;
+  color: #ffffff;
+  text-shadow: 0 2px 8px rgba(0, 0, 0, 0.5);
+  font-variant-numeric: tabular-nums;
+}
+
+/* Timer Badge (petit, dans header série) */
+.timer,
+.timer-badge {
+  background: rgba(60, 60, 67, 0.6);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  color: rgba(255, 255, 255, 0.85);
+  padding: 6px 12px;
+  border-radius: 20px;
+  font-size: 14px;
+  font-weight: 600;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+}
+
+.timer.active,
+.timer-badge.active {
+  background: linear-gradient(135deg, rgba(255, 159, 10, 0.3), rgba(255, 179, 64, 0.3));
+  border-color: rgba(255, 159, 10, 0.5);
+  color: #FFB340;
+  animation: timerPulse 2s ease-in-out infinite;
+  box-shadow: 
+    0 4px 16px rgba(255, 159, 10, 0.4),
+    0 0 30px rgba(255, 159, 10, 0.2);
+}
+
+@keyframes timerPulse {
+  0%, 100% { 
+    box-shadow: 0 4px 16px rgba(255, 159, 10, 0.4), 0 0 30px rgba(255, 159, 10, 0.2);
+  }
+  50% { 
+    box-shadow: 0 4px 20px rgba(255, 159, 10, 0.6), 0 0 40px rgba(255, 159, 10, 0.3);
+  }
+}
+
+/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+   ✓ CHECKBOX / BOUTON VALIDATION
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+
+.check-button,
+.checkbox,
+.validate-btn {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: rgba(60, 60, 67, 0.6);
+  backdrop-filter: blur(10px);
+  border: 2px solid rgba(255, 255, 255, 0.2);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+}
+
+.check-button:hover,
+.checkbox:hover,
+.validate-btn:hover {
+  background: rgba(70, 70, 75, 0.8);
+  border-color: rgba(255, 255, 255, 0.3);
+  transform: scale(1.05);
+}
+
+.check-button.checked,
+.checkbox.checked,
+.validate-btn.checked {
+  background: linear-gradient(135deg, #30D158, #32D65A);
+  border-color: rgba(48, 209, 88, 0.6);
+  box-shadow: 
+    0 4px 16px rgba(48, 209, 88, 0.4),
+    0 0 30px rgba(48, 209, 88, 0.2);
+}
+
+/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+   📊 STATS - Layout Clean
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+
+.set-stats,
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px;
+  margin-bottom: 12px;
+}
+
+.stat-item,
+.stat {
+  background: rgba(58, 58, 60, 0.4);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 12px;
+  padding: 12px;
+  text-align: center;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.05);
+}
+
+.stat-label {
+  color: rgba(255, 255, 255, 0.5);
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-bottom: 4px;
+  display: block;
+}
+
+.stat-value {
+  color: #ffffff;
+  font-size: 18px;
+  font-weight: 700;
+  letter-spacing: -0.3px;
+  display: block;
+}
+
+/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+   📝 INPUTS MODIFIABLES - Style iOS
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+
+.editable-stat {
+  position: relative;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.editable-stat:hover {
+  background: rgba(70, 70, 75, 0.5);
+  transform: scale(1.02);
+}
+
+.editable-stat input {
+  background: transparent;
+  border: none;
+  color: #ffffff;
+  font-size: 18px;
+  font-weight: 700;
+  text-align: center;
+  width: 100%;
+  padding: 4px;
+  outline: none;
+  font-family: inherit;
+  border-radius: 6px;
+  transition: background 0.2s;
+}
+
+.editable-stat input:focus {
+  background: rgba(0, 122, 255, 0.2);
+  box-shadow: 0 0 0 2px rgba(0, 122, 255, 0.4);
+}
+
+.editable-stat.editing {
+  background: rgba(0, 122, 255, 0.15);
+  border-color: rgba(0, 122, 255, 0.4);
+}
+
+/* Boutons +/- pour ajuster */
+.stat-controls {
+  display: flex;
+  gap: 4px;
+  justify-content: center;
+  margin-top: 4px;
+}
+
+.stat-btn {
+  width: 24px;
+  height: 24px;
+  border-radius: 6px;
+  background: rgba(60, 60, 67, 0.6);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  color: #ffffff;
+  font-size: 16px;
+  font-weight: 700;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.stat-btn:hover {
+  background: rgba(0, 122, 255, 0.3);
+  border-color: rgba(0, 122, 255, 0.5);
+  transform: scale(1.1);
+}
+
+.stat-btn:active {
+  transform: scale(0.95);
+}
+
+/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+   🔗 SUPERSET - Groupement Visuel (comme Image 3)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+
+.superset-group {
+  position: relative;
+  padding: 16px;
+  margin-bottom: 24px;
+  background: rgba(28, 28, 30, 0.5);
+  border: 2px solid transparent;
+  border-radius: 24px;
+  border-image: linear-gradient(135deg, #FF9F0A, #FFB340) 1;
+  box-shadow: 
+    0 8px 32px rgba(255, 159, 10, 0.2),
+    0 0 40px rgba(255, 159, 10, 0.1),
+    inset 0 1px 0 rgba(255, 159, 10, 0.1);
+}
+
+.superset-group::before {
+  content: '';
+  position: absolute;
+  left: 8px;
+  top: 48px;
+  bottom: 8px;
+  width: 4px;
+  background: linear-gradient(180deg, #FF9F0A 0%, #FFB340 100%);
+  border-radius: 2px;
+  box-shadow: 
+    0 0 20px rgba(255, 159, 10, 0.4),
+    0 0 40px rgba(255, 159, 10, 0.2);
+}
+
+.superset-label {
+  background: linear-gradient(135deg, rgba(255, 159, 10, 0.3), rgba(255, 179, 64, 0.3));
+  backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 159, 10, 0.4);
+  color: #FFB340;
+  padding: 8px 16px;
+  border-radius: 16px;
+  font-size: 13px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  display: inline-block;
+  margin-bottom: 12px;
+  box-shadow: 
+    0 4px 16px rgba(255, 159, 10, 0.3),
+    0 0 30px rgba(255, 159, 10, 0.15);
+}
+
+.superset-group .exercise {
+  margin-left: 20px;
+}
+
+/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+   🎨 DETAIL BADGES - Techniques
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+
+.exercise-details,
+.set-details {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin-top: 8px;
+}
+
+.detail-badge {
+  background: rgba(58, 58, 60, 0.5);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  color: rgba(255, 255, 255, 0.8);
+  padding: 4px 10px;
+  border-radius: 10px;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.2px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
+}
+
+.detail-badge.tempo {
+  background: linear-gradient(135deg, rgba(94, 92, 230, 0.25), rgba(110, 108, 255, 0.25));
+  border-color: rgba(94, 92, 230, 0.4);
+  color: #5E5CE6;
+  box-shadow: 
+    0 3px 10px rgba(94, 92, 230, 0.25),
+    0 0 20px rgba(94, 92, 230, 0.1);
+}
+
+.detail-badge.rpe {
+  background: linear-gradient(135deg, rgba(255, 214, 10, 0.25), rgba(255, 224, 64, 0.25));
+  border-color: rgba(255, 214, 10, 0.4);
+  color: #FFD60A;
+}
+
+.detail-badge.technique {
+  background: linear-gradient(135deg, rgba(255, 69, 58, 0.25), rgba(255, 89, 78, 0.25));
+  border-color: rgba(255, 69, 58, 0.4);
+  color: #FF453A;
+}
+
+/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+   ✨ ANIMATIONS
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.set-card:nth-child(1) { animation-delay: 0.05s; }
+.set-card:nth-child(2) { animation-delay: 0.1s; }
+.set-card:nth-child(3) { animation-delay: 0.15s; }
+.set-card:nth-child(4) { animation-delay: 0.2s; }
+.set-card:nth-child(5) { animation-delay: 0.25s; }
+
+@keyframes shimmer {
+  0% { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
+
+/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+   📱 SCROLLBAR iOS Style
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.2);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 255, 255, 0.3);
+}
+
+/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+   🎯 BOUTONS D'ACTION
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+
+.btn,
+.button {
+  background: rgba(0, 122, 255, 0.2);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(0, 122, 255, 0.4);
+  color: #5AC8FA;
+  padding: 12px 24px;
+  border-radius: 16px;
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s;
+  box-shadow: 0 4px 12px rgba(0, 122, 255, 0.2);
+}
+
+.btn:hover,
+.button:hover {
+  background: rgba(0, 122, 255, 0.3);
+  border-color: rgba(0, 122, 255, 0.6);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(0, 122, 255, 0.3);
+}
+
+.btn:active,
+.button:active {
+  transform: translateY(0);
+}
+
+.btn.danger {
+  background: rgba(255, 69, 58, 0.2);
+  border-color: rgba(255, 69, 58, 0.4);
+  color: #FF453A;
+}
+
+.btn.success {
+  background: rgba(48, 209, 88, 0.2);
+  border-color: rgba(48, 209, 88, 0.4);
+  color: #30D158;
+}
+
+/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+   📱 RESPONSIVE
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+
+@media (max-width: 480px) {
+  .workout-header h1,
+  .workout-header h2 {
+    font-size: 24px;
+  }
+  
+  .set-stats,
+  .stats-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  
+  .timer-container {
+    width: 100px;
+    height: 100px;
+  }
+  
+  .timer-text {
+    font-size: 28px;
+  }
+}
