@@ -1,0 +1,704 @@
+/* ================================================================== */
+/* 13-WORKOUT-PREMIUM-DESIGN.CSS - VERSION PROFESSIONNELLE          */
+/* Design premium avec effets visuels avancés                        */
+/* ================================================================== */
+
+/* ================================================================== */
+/* 1. VARIABLES PREMIUM                                              */
+/* ================================================================== */
+
+:root {
+  /* Couleurs premium avec gradients */
+  --premium-primary: #ff6b35;
+  --premium-primary-light: #ff8c5a;
+  --premium-primary-dark: #e55a2b;
+  
+  --premium-secondary: #00d9ff;
+  --premium-accent: #ffd60a;
+  
+  /* Effets de halo */
+  --glow-primary: 0 0 20px rgba(255, 107, 53, 0.4),
+                  0 0 40px rgba(255, 107, 53, 0.2),
+                  0 0 60px rgba(255, 107, 53, 0.1);
+  
+  --glow-secondary: 0 0 20px rgba(0, 217, 255, 0.4),
+                    0 0 40px rgba(0, 217, 255, 0.2);
+  
+  --glow-accent: 0 0 15px rgba(255, 214, 10, 0.5),
+                 0 0 30px rgba(255, 214, 10, 0.3);
+  
+  /* Piliers et bordures */
+  --pillar-gradient: linear-gradient(180deg, 
+    var(--premium-primary) 0%, 
+    var(--premium-primary-dark) 100%);
+  
+  --card-gradient: linear-gradient(135deg, 
+    rgba(255, 107, 53, 0.05) 0%, 
+    rgba(0, 217, 255, 0.05) 100%);
+}
+
+/* ================================================================== */
+/* 2. HEADER DE SÉANCE - EFFET PREMIUM                               */
+/* ================================================================== */
+
+.workout-header {
+  background: linear-gradient(135deg, 
+    rgba(30, 30, 40, 0.95) 0%, 
+    rgba(20, 20, 30, 0.98) 100%);
+  border: 1px solid rgba(255, 107, 53, 0.2);
+  box-shadow: 
+    0 8px 32px rgba(0, 0, 0, 0.3),
+    inset 0 1px 0 rgba(255, 255, 255, 0.1),
+    var(--glow-primary);
+  position: relative;
+  overflow: hidden;
+}
+
+/* Effet de brillance qui traverse */
+.workout-header::before {
+  content: '';
+  position: absolute;
+  top: -50%;
+  left: -50%;
+  width: 200%;
+  height: 200%;
+  background: linear-gradient(
+    45deg,
+    transparent 30%,
+    rgba(255, 255, 255, 0.05) 50%,
+    transparent 70%
+  );
+  animation: shine 6s infinite;
+  pointer-events: none;
+}
+
+@keyframes shine {
+  0% { transform: translateX(-100%) translateY(-100%) rotate(45deg); }
+  100% { transform: translateX(100%) translateY(100%) rotate(45deg); }
+}
+
+.workout-header h2 {
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  text-shadow: var(--glow-primary);
+  position: relative;
+}
+
+/* Ligne décorative sous le titre */
+.workout-header h2::after {
+  content: '';
+  position: absolute;
+  bottom: -8px;
+  left: 0;
+  width: 60px;
+  height: 3px;
+  background: var(--pillar-gradient);
+  box-shadow: var(--glow-primary);
+  border-radius: 2px;
+}
+
+/* ================================================================== */
+/* 3. BLOCK ET TEMPO - BADGES PREMIUM                                */
+/* ================================================================== */
+
+.workout-block-info {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+  margin-top: 16px;
+}
+
+.workout-block,
+.workout-tempo {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 16px;
+  border-radius: 20px;
+  font-weight: 600;
+  font-size: 13px;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+  position: relative;
+  overflow: hidden;
+}
+
+/* Badge BLOCK avec effet pilier */
+.workout-block {
+  background: var(--pillar-gradient);
+  color: white;
+  box-shadow: 
+    0 4px 12px rgba(255, 107, 53, 0.3),
+    inset 0 1px 0 rgba(255, 255, 255, 0.2),
+    var(--glow-primary);
+  border: 1px solid rgba(255, 140, 90, 0.5);
+}
+
+/* Badge TEMPO avec effet néon */
+.workout-tempo {
+  background: linear-gradient(135deg, 
+    rgba(0, 217, 255, 0.15) 0%, 
+    rgba(0, 180, 220, 0.15) 100%);
+  color: var(--premium-secondary);
+  border: 1px solid var(--premium-secondary);
+  box-shadow: var(--glow-secondary);
+}
+
+/* Animation au hover */
+.workout-block:hover,
+.workout-tempo:hover {
+  transform: translateY(-2px);
+  transition: transform 0.2s ease;
+}
+
+/* ================================================================== */
+/* 4. CARTES D'EXERCICES - EFFET GLASS + HALO                        */
+/* ================================================================== */
+
+.exercise-card {
+  background: linear-gradient(135deg,
+    rgba(40, 40, 55, 0.8) 0%,
+    rgba(30, 30, 45, 0.9) 100%);
+  border: 1px solid rgba(255, 107, 53, 0.15);
+  border-radius: 20px;
+  padding: 24px;
+  margin-bottom: 24px;
+  box-shadow: 
+    0 8px 32px rgba(0, 0, 0, 0.3),
+    inset 0 1px 0 rgba(255, 255, 255, 0.05);
+  position: relative;
+  overflow: hidden;
+  backdrop-filter: blur(10px);
+}
+
+/* Effet de gradient lumineux sur le bord */
+.exercise-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: linear-gradient(90deg,
+    transparent 0%,
+    var(--premium-primary) 50%,
+    transparent 100%);
+  opacity: 0.6;
+}
+
+/* Pilier vertical gauche pour exercices */
+.exercise-card::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 4px;
+  background: var(--pillar-gradient);
+  box-shadow: var(--glow-primary);
+  border-radius: 0 2px 2px 0;
+}
+
+.exercise-card h3 {
+  color: var(--premium-primary);
+  text-transform: uppercase;
+  letter-spacing: 1.5px;
+  font-weight: 700;
+  margin-bottom: 16px;
+  text-shadow: var(--glow-primary);
+  padding-left: 16px;
+}
+
+/* ================================================================== */
+/* 5. NOTES - STYLE PREMIUM AVEC ICÔNE                               */
+/* ================================================================== */
+
+.exercise-notes {
+  background: linear-gradient(135deg,
+    rgba(255, 214, 10, 0.08) 0%,
+    rgba(255, 180, 0, 0.08) 100%);
+  border-left: 4px solid var(--premium-accent);
+  border-radius: 12px;
+  padding: 14px 16px;
+  margin: 16px 0;
+  color: #ffd60a;
+  font-size: 14px;
+  line-height: 1.6;
+  position: relative;
+  box-shadow: 
+    0 4px 12px rgba(255, 214, 10, 0.15),
+    inset 0 1px 0 rgba(255, 255, 255, 0.1);
+}
+
+.exercise-notes::before {
+  content: '💡';
+  position: absolute;
+  left: -2px;
+  top: -8px;
+  font-size: 20px;
+  filter: drop-shadow(var(--glow-accent));
+}
+
+/* ================================================================== */
+/* 6. STATS D'EXERCICE - GRILLE PREMIUM                              */
+/* ================================================================== */
+
+.exercise-stats {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 12px;
+  margin: 20px 0;
+  padding: 16px;
+  background: rgba(0, 0, 0, 0.2);
+  border-radius: 12px;
+  border: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.stat-item {
+  text-align: center;
+  position: relative;
+}
+
+.stat-label {
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  color: rgba(255, 255, 255, 0.5);
+  margin-bottom: 6px;
+  font-weight: 600;
+}
+
+.stat-value {
+  font-size: 20px;
+  font-weight: 700;
+  color: var(--premium-primary);
+  text-shadow: 0 0 10px rgba(255, 107, 53, 0.3);
+}
+
+/* Highlight spécial pour TEMPO */
+.stat-item.tempo .stat-value {
+  color: var(--premium-secondary);
+  text-shadow: var(--glow-secondary);
+}
+
+/* Highlight spécial pour RPE */
+.stat-item.rpe .stat-value {
+  color: var(--premium-accent);
+  text-shadow: var(--glow-accent);
+}
+
+/* ================================================================== */
+/* 7. CARTES DE SÉRIES - DESIGN PREMIUM MODULAIRE                    */
+/* ================================================================== */
+
+.series-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-top: 20px;
+}
+
+.series-card {
+  background: linear-gradient(135deg,
+    rgba(50, 50, 65, 0.6) 0%,
+    rgba(40, 40, 55, 0.6) 100%);
+  border: 2px solid rgba(255, 107, 53, 0.2);
+  border-radius: 16px;
+  padding: 16px;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  position: relative;
+  overflow: hidden;
+  cursor: pointer;
+}
+
+/* Effet hover avec halo */
+.series-card:hover {
+  border-color: var(--premium-primary);
+  box-shadow: var(--glow-primary);
+  transform: translateX(4px);
+  background: linear-gradient(135deg,
+    rgba(60, 60, 75, 0.7) 0%,
+    rgba(50, 50, 65, 0.7) 100%);
+}
+
+/* État complété */
+.series-card.completed {
+  background: linear-gradient(135deg,
+    rgba(255, 107, 53, 0.15) 0%,
+    rgba(229, 90, 43, 0.15) 100%);
+  border-color: var(--premium-primary);
+  box-shadow: var(--glow-primary);
+}
+
+.series-card.completed::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(90deg,
+    transparent 0%,
+    rgba(255, 107, 53, 0.1) 50%,
+    transparent 100%);
+  animation: completedShine 2s ease-in-out;
+}
+
+@keyframes completedShine {
+  0% { transform: translateX(-100%); }
+  100% { transform: translateX(100%); }
+}
+
+/* ================================================================== */
+/* 8. NUMÉRO DE SÉRIE - BADGE PREMIUM                                */
+/* ================================================================== */
+
+.series-number {
+  min-width: 56px;
+  height: 56px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--pillar-gradient);
+  border-radius: 14px;
+  font-size: 24px;
+  font-weight: 800;
+  color: white;
+  text-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+  box-shadow: 
+    0 4px 12px rgba(255, 107, 53, 0.4),
+    inset 0 1px 0 rgba(255, 255, 255, 0.3),
+    inset 0 -1px 0 rgba(0, 0, 0, 0.2);
+  position: relative;
+  overflow: hidden;
+}
+
+/* Effet de reflet */
+.series-number::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg,
+    transparent 0%,
+    rgba(255, 255, 255, 0.3) 50%,
+    transparent 100%);
+  animation: numberShine 3s infinite;
+}
+
+@keyframes numberShine {
+  0% { left: -100%; }
+  50% { left: 100%; }
+  100% { left: 100%; }
+}
+
+.series-card.completed .series-number {
+  background: linear-gradient(135deg,
+    #4ade80 0%,
+    #22c55e 100%);
+  box-shadow: 
+    0 4px 12px rgba(74, 222, 128, 0.4),
+    0 0 20px rgba(74, 222, 128, 0.3);
+}
+
+/* ================================================================== */
+/* 9. CONTENU DE SÉRIE - LAYOUT AMÉLIORÉ                             */
+/* ================================================================== */
+
+.series-content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.series-reps {
+  font-size: 18px;
+  font-weight: 700;
+  color: white;
+  letter-spacing: 0.5px;
+}
+
+.series-reps span {
+  color: var(--premium-primary);
+  text-shadow: 0 0 8px rgba(255, 107, 53, 0.4);
+}
+
+/* ================================================================== */
+/* 10. TIMER DANS LES CARTES - STYLE PREMIUM                         */
+/* ================================================================== */
+
+.series-timer {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 12px;
+  background: rgba(0, 217, 255, 0.1);
+  border: 1px solid var(--premium-secondary);
+  border-radius: 20px;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--premium-secondary);
+  box-shadow: var(--glow-secondary);
+}
+
+.series-timer::before {
+  content: '⏱️';
+  font-size: 14px;
+}
+
+/* ================================================================== */
+/* 11. CHECKBOX PREMIUM                                              */
+/* ================================================================== */
+
+.series-checkbox {
+  min-width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 2px solid var(--premium-primary);
+  border-radius: 8px;
+  background: rgba(255, 107, 53, 0.1);
+  cursor: pointer;
+  transition: all 0.3s ease;
+  position: relative;
+}
+
+.series-checkbox:hover {
+  background: rgba(255, 107, 53, 0.2);
+  box-shadow: var(--glow-primary);
+  transform: scale(1.05);
+}
+
+.series-checkbox.checked {
+  background: var(--premium-primary);
+  box-shadow: var(--glow-primary);
+}
+
+.series-checkbox.checked::after {
+  content: '✓';
+  color: white;
+  font-size: 20px;
+  font-weight: bold;
+  animation: checkPop 0.3s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+}
+
+@keyframes checkPop {
+  0% { transform: scale(0); opacity: 0; }
+  50% { transform: scale(1.2); }
+  100% { transform: scale(1); opacity: 1; }
+}
+
+/* ================================================================== */
+/* 12. SUPERSETS - GROUPEMENT VISUEL PREMIUM                         */
+/* ================================================================== */
+
+.superset-group {
+  position: relative;
+  padding: 20px;
+  margin: 24px 0;
+  background: linear-gradient(135deg,
+    rgba(0, 217, 255, 0.05) 0%,
+    rgba(0, 180, 220, 0.05) 100%);
+  border: 2px solid var(--premium-secondary);
+  border-radius: 20px;
+  box-shadow: var(--glow-secondary);
+}
+
+/* Badge SUPERSET en haut à gauche */
+.superset-group::before {
+  content: 'SUPERSET';
+  position: absolute;
+  top: -12px;
+  left: 20px;
+  padding: 6px 16px;
+  background: linear-gradient(135deg,
+    var(--premium-secondary) 0%,
+    #00b8d4 100%);
+  color: white;
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 1.5px;
+  border-radius: 12px;
+  box-shadow: 
+    0 4px 12px rgba(0, 217, 255, 0.4),
+    var(--glow-secondary);
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+}
+
+/* Pilier vertical pour superset */
+.superset-group::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 4px;
+  background: linear-gradient(180deg,
+    var(--premium-secondary) 0%,
+    #00b8d4 100%);
+  box-shadow: var(--glow-secondary);
+  border-radius: 0 2px 2px 0;
+}
+
+.superset-group .exercise-card {
+  margin-bottom: 16px;
+}
+
+.superset-group .exercise-card:last-child {
+  margin-bottom: 0;
+}
+
+/* ================================================================== */
+/* 13. TECHNIQUES D'INTENSIFICATION - BADGES PREMIUM                 */
+/* ================================================================== */
+
+.intensity-techniques {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 12px;
+}
+
+.intensity-badge {
+  padding: 6px 12px;
+  border-radius: 16px;
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  position: relative;
+  overflow: hidden;
+}
+
+/* Drop sets */
+.intensity-badge.drop-set {
+  background: linear-gradient(135deg,
+    rgba(239, 68, 68, 0.2) 0%,
+    rgba(220, 38, 38, 0.2) 100%);
+  color: #ef4444;
+  border: 1px solid #ef4444;
+  box-shadow: 0 0 15px rgba(239, 68, 68, 0.3);
+}
+
+/* Rest-pause */
+.intensity-badge.rest-pause {
+  background: linear-gradient(135deg,
+    rgba(168, 85, 247, 0.2) 0%,
+    rgba(147, 51, 234, 0.2) 100%);
+  color: #a855f7;
+  border: 1px solid #a855f7;
+  box-shadow: 0 0 15px rgba(168, 85, 247, 0.3);
+}
+
+/* Myoreps */
+.intensity-badge.myoreps {
+  background: linear-gradient(135deg,
+    rgba(34, 197, 94, 0.2) 0%,
+    rgba(22, 163, 74, 0.2) 100%);
+  color: #22c55e;
+  border: 1px solid #22c55e;
+  box-shadow: 0 0 15px rgba(34, 197, 94, 0.3);
+}
+
+/* ================================================================== */
+/* 14. ANIMATIONS D'ENTRÉE                                           */
+/* ================================================================== */
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.exercise-card {
+  animation: fadeInUp 0.5s ease-out backwards;
+}
+
+.exercise-card:nth-child(1) { animation-delay: 0.1s; }
+.exercise-card:nth-child(2) { animation-delay: 0.2s; }
+.exercise-card:nth-child(3) { animation-delay: 0.3s; }
+.exercise-card:nth-child(4) { animation-delay: 0.4s; }
+
+.series-card {
+  animation: fadeInUp 0.3s ease-out backwards;
+}
+
+.series-card:nth-child(1) { animation-delay: 0.05s; }
+.series-card:nth-child(2) { animation-delay: 0.1s; }
+.series-card:nth-child(3) { animation-delay: 0.15s; }
+.series-card:nth-child(4) { animation-delay: 0.2s; }
+.series-card:nth-child(5) { animation-delay: 0.25s; }
+
+/* ================================================================== */
+/* 15. RESPONSIVE PREMIUM                                            */
+/* ================================================================== */
+
+@media (max-width: 768px) {
+  .exercise-stats {
+    grid-template-columns: repeat(3, 1fr);
+    gap: 10px;
+  }
+  
+  .stat-item.tempo,
+  .stat-item.rpe {
+    grid-column: span 1;
+  }
+  
+  .series-number {
+    min-width: 48px;
+    height: 48px;
+    font-size: 20px;
+  }
+  
+  .superset-group {
+    padding: 16px;
+  }
+}
+
+@media (max-width: 480px) {
+  .exercise-stats {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  
+  .workout-block-info {
+    flex-direction: column;
+    gap: 8px;
+  }
+  
+  .workout-block,
+  .workout-tempo {
+    width: 100%;
+    justify-content: center;
+  }
+}
+
+/* ================================================================== */
+/* 16. DARK MODE AMÉLIORÉ                                            */
+/* ================================================================== */
+
+@media (prefers-color-scheme: dark) {
+  .exercise-card {
+    background: linear-gradient(135deg,
+      rgba(30, 30, 45, 0.9) 0%,
+      rgba(20, 20, 35, 0.95) 100%);
+  }
+  
+  .series-card {
+    background: linear-gradient(135deg,
+      rgba(40, 40, 55, 0.7) 0%,
+      rgba(30, 30, 45, 0.7) 100%);
+  }
+}
+
+/* ================================================================== */
+/* FIN DU FICHIER - DESIGN PREMIUM MODULAIRE                         */
+/* ================================================================== */
