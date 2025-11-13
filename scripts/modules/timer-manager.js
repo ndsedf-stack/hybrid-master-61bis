@@ -1,5 +1,5 @@
 /**
- * TIMER MANAGER - VERSION PREMIUM CORRIGÉE
+ * TIMER MANAGER - VERSION COMPLÈTE
  * Gestion du timer de repos entre séries
  */
 export default class TimerManager {
@@ -80,10 +80,10 @@ export default class TimerManager {
   }
 
   /**
-   * 🔥 CORRIGÉ : Démarre le timer avec un temps de repos (en secondes)
+   * Démarre le timer avec un temps de repos (en secondes)
    */
-  start(seconds, exerciseName = '', setNumber = 0) {
-    console.log(`🎯 Timer.start() appelé avec:`, { seconds, exerciseName, setNumber });
+  start(seconds, exerciseName = '', setNumber = 0, totalSets = 0) {
+    console.log('🎯 Timer.start() appelé avec:', { seconds, exerciseName, setNumber, totalSets });
     
     this.stop(); // Arrête tout timer en cours
 
@@ -97,14 +97,14 @@ export default class TimerManager {
       this.exerciseNameDisplay.textContent = exerciseName || 'Exercice';
     }
     if (this.setNumberDisplay) {
-      this.setNumberDisplay.textContent = `Série ${setNumber}`;
+      this.setNumberDisplay.textContent = `Série ${setNumber}/${totalSets}`;
     }
 
     this.show();
     this.updateDisplay();
     this.resume();
 
-    console.log(`⏱️ Timer démarré: ${seconds}s pour ${exerciseName} - Série ${setNumber}`);
+    console.log(`⏱️ Timer démarré: ${seconds}s pour ${exerciseName} - Série ${setNumber}/${totalSets}`);
   }
 
   /**
@@ -208,7 +208,7 @@ export default class TimerManager {
     this.playNotification();
     this.vibrate();
     
-    // 🔥 AJOUT : Affiche un message avant de cacher
+    // Affiche un message avant de cacher
     if (this.timeDisplay) {
       this.timeDisplay.textContent = '0:00';
     }
@@ -237,7 +237,7 @@ export default class TimerManager {
     // Mise à jour de la barre de progression circulaire
     if (this.progressCircle && this.initialTime > 0) {
       const percentage = (this.remainingTime / this.initialTime) * 100;
-      const circumference = 2 * Math.PI * 70; // rayon = 70 (corrigé depuis votre HTML)
+      const circumference = 2 * Math.PI * 70; // rayon = 70
       const offset = circumference - (percentage / 100) * circumference;
       
       this.progressCircle.style.strokeDasharray = `${circumference} ${circumference}`;
