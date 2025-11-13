@@ -132,10 +132,7 @@ class HybridMasterApp {
       };
 
       // ✅ CORRECTION ICI : On passe formattedWeekData en PREMIER, pas contentElement
-      contentElement.innerHTML = this.homeRenderer.render(
-  { days: formattedWeekData }, // ✅ Enveloppe dans { days: ... }
-  contentElement
-);
+      contentElement.innerHTML = this.homeRenderer.render(formattedWeekData, contentElement);
       
       // Attache les écouteurs d'événements aux cartes
       this.attachHomeEventListeners();
