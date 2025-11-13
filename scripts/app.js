@@ -1,5 +1,5 @@
 // ==================================================================
-// APP.JS - VERSION MINIMALE FONCTIONNELLE
+// APP.JS - VERSION CORRIGÉE
 // ==================================================================
 
 import programData from './program-data.js';
@@ -131,7 +131,8 @@ class HybridMasterApp {
         days: daysArray
       };
 
-      contentElement.innerHTML = this.homeRenderer.render(contentElement, formattedWeekData);
+      // ✅ CORRECTION ICI : On passe formattedWeekData en PREMIER, pas contentElement
+      contentElement.innerHTML = this.homeRenderer.render(formattedWeekData, contentElement);
       
       // Attache les écouteurs d'événements aux cartes
       this.attachHomeEventListeners();
