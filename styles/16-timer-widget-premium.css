@@ -1,0 +1,510 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Timer Widget Premium</title>
+  <style>
+    /* ═══════════════════════════════════════════════════════════
+       ⏱️ TIMER WIDGET PREMIUM - AMÉLIORATION VISUELLE
+       NE TOUCHE PAS AUX SÉRIES - UNIQUEMENT LE WIDGET EN BAS
+       ═══════════════════════════════════════════════════════════ */
+
+    /* Container principal du timer widget */
+    #timer-widget {
+      position: fixed;
+      bottom: 80px;
+      left: 50%;
+      transform: translateX(-50%) translateY(150%);
+      width: 90%;
+      max-width: 420px;
+      
+      /* Glass morphism iOS 18 */
+      background: linear-gradient(
+        135deg,
+        rgba(30, 30, 35, 0.95) 0%,
+        rgba(20, 20, 25, 0.95) 100%
+      );
+      backdrop-filter: blur(40px) saturate(180%);
+      -webkit-backdrop-filter: blur(40px) saturate(180%);
+      
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      border-radius: 32px;
+      
+      /* Ombres premium multiples */
+      box-shadow: 
+        0 0 0 1px rgba(255, 255, 255, 0.06) inset,
+        0 24px 80px rgba(0, 0, 0, 0.6),
+        0 12px 40px rgba(0, 0, 0, 0.4),
+        0 4px 16px rgba(0, 0, 0, 0.3);
+      
+      padding: 28px;
+      z-index: 9999;
+      
+      /* Animation fluide */
+      transition: all 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+
+    /* Timer visible */
+    #timer-widget.visible {
+      transform: translateX(-50%) translateY(0);
+    }
+
+    /* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+       📋 HEADER
+       ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+
+    #timer-widget .timer-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      margin-bottom: 28px;
+    }
+
+    #timer-widget .timer-info {
+      flex: 1;
+    }
+
+    #timer-exercise-name {
+      font-size: 18px;
+      font-weight: 700;
+      color: #ffffff;
+      margin: 0 0 6px 0;
+      letter-spacing: -0.4px;
+      text-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+    }
+
+    #timer-set-number {
+      font-size: 15px;
+      font-weight: 600;
+      color: rgba(255, 255, 255, 0.65);
+      margin: 0;
+    }
+
+    #timer-close {
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      border: none;
+      background: rgba(255, 255, 255, 0.1);
+      backdrop-filter: blur(10px);
+      color: rgba(255, 255, 255, 0.8);
+      font-size: 24px;
+      line-height: 1;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.2s ease;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+    }
+
+    #timer-close:hover {
+      background: rgba(255, 255, 255, 0.15);
+      transform: scale(1.05);
+    }
+
+    #timer-close:active {
+      transform: scale(0.95);
+    }
+
+    /* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+       ⏱️ CERCLE TIMER (VERSION PREMIUM)
+       ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+
+    #timer-widget .timer-display {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      margin: 0 0 28px 0;
+      position: relative;
+    }
+
+    #timer-widget .timer-circle {
+      position: relative;
+      width: 180px;
+      height: 180px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    /* SVG container */
+    #timer-widget .timer-circle svg {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      transform: rotate(-90deg);
+      filter: drop-shadow(0 4px 12px rgba(0, 0, 0, 0.3));
+    }
+
+    /* Cercle de fond */
+    #timer-widget .timer-progress-bg {
+      fill: none;
+      stroke: rgba(255, 255, 255, 0.08);
+      stroke-width: 8;
+    }
+
+    /* Cercle de progression */
+    #timer-widget .timer-progress-circle {
+      fill: none;
+      stroke: url(#timerGradient);
+      stroke-width: 8;
+      stroke-linecap: round;
+      stroke-dasharray: 439.82;
+      stroke-dashoffset: 0;
+      transition: stroke-dashoffset 1s linear, stroke 0.3s ease;
+      filter: drop-shadow(0 0 12px rgba(255, 159, 10, 0.6));
+    }
+
+    /* Gradient pour le cercle */
+    #timerGradient stop:first-child {
+      stop-color: #FF9F0A;
+    }
+
+    #timerGradient stop:last-child {
+      stop-color: #FFB340;
+    }
+
+    /* Timer actif - animation pulse */
+    #timer-widget.active .timer-progress-circle {
+      animation: timerPulse 2s ease-in-out infinite;
+    }
+
+    @keyframes timerPulse {
+      0%, 100% {
+        filter: drop-shadow(0 0 12px rgba(255, 159, 10, 0.6));
+      }
+      50% {
+        filter: drop-shadow(0 0 24px rgba(255, 159, 10, 0.9));
+      }
+    }
+
+    /* Timer < 10s - rouge */
+    #timer-widget.warning .timer-progress-circle {
+      stroke: #FF453A;
+      filter: drop-shadow(0 0 16px rgba(255, 69, 58, 0.8));
+      animation: timerWarning 0.8s ease-in-out infinite;
+    }
+
+    @keyframes timerWarning {
+      0%, 100% {
+        filter: drop-shadow(0 0 16px rgba(255, 69, 58, 0.8));
+      }
+      50% {
+        filter: drop-shadow(0 0 28px rgba(255, 69, 58, 1));
+      }
+    }
+
+    /* Texte du timer */
+    #timer-time {
+      position: relative;
+      z-index: 1;
+      font-size: 48px;
+      font-weight: 700;
+      color: #ffffff;
+      letter-spacing: -1px;
+      text-shadow: 
+        0 2px 12px rgba(0, 0, 0, 0.4),
+        0 4px 24px rgba(255, 159, 10, 0.3);
+      font-variant-numeric: tabular-nums;
+    }
+
+    /* Timer warning - texte rouge */
+    #timer-widget.warning #timer-time {
+      color: #FF453A;
+      text-shadow: 
+        0 2px 12px rgba(0, 0, 0, 0.4),
+        0 4px 24px rgba(255, 69, 58, 0.5);
+    }
+
+    /* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+       🎮 CONTRÔLES (BOUTONS)
+       ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+
+    #timer-widget .timer-controls {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 10px;
+    }
+
+    #timer-widget .timer-controls button {
+      height: 48px;
+      border: none;
+      border-radius: 14px;
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+      position: relative;
+      overflow: hidden;
+    }
+
+    /* Bouton Pause/Resume */
+    #timer-pause {
+      grid-column: span 2;
+      background: linear-gradient(135deg, #007AFF 0%, #0051D5 100%);
+      color: white;
+      border: 1px solid rgba(255, 255, 255, 0.2);
+    }
+
+    #timer-pause:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 16px rgba(0, 122, 255, 0.4);
+    }
+
+    #timer-pause:active {
+      transform: translateY(0);
+    }
+
+    /* Bouton -15s */
+    #timer-minus-15 {
+      background: rgba(255, 255, 255, 0.1);
+      backdrop-filter: blur(10px);
+      color: white;
+      border: 1px solid rgba(255, 255, 255, 0.15);
+    }
+
+    #timer-minus-15:hover {
+      background: rgba(255, 255, 255, 0.15);
+      transform: translateY(-2px);
+    }
+
+    /* Bouton +15s */
+    #timer-plus-15 {
+      background: rgba(255, 255, 255, 0.1);
+      backdrop-filter: blur(10px);
+      color: white;
+      border: 1px solid rgba(255, 255, 255, 0.15);
+    }
+
+    #timer-plus-15:hover {
+      background: rgba(255, 255, 255, 0.15);
+      transform: translateY(-2px);
+    }
+
+    /* Bouton Reset */
+    #timer-reset {
+      background: rgba(255, 204, 0, 0.15);
+      backdrop-filter: blur(10px);
+      color: #FFD60A;
+      border: 1px solid rgba(255, 214, 10, 0.3);
+    }
+
+    #timer-reset:hover {
+      background: rgba(255, 204, 0, 0.25);
+      transform: translateY(-2px);
+    }
+
+    /* Bouton Skip */
+    #timer-skip {
+      background: rgba(48, 209, 88, 0.15);
+      backdrop-filter: blur(10px);
+      color: #30D158;
+      border: 1px solid rgba(48, 209, 88, 0.3);
+    }
+
+    #timer-skip:hover {
+      background: rgba(48, 209, 88, 0.25);
+      transform: translateY(-2px);
+    }
+
+    /* Active state pour tous les boutons */
+    #timer-widget .timer-controls button:active {
+      transform: scale(0.96);
+    }
+
+    /* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+       🎭 ANIMATIONS & EFFETS
+       ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+
+    /* Effet ripple sur les boutons */
+    #timer-widget .timer-controls button::after {
+      content: '';
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      width: 0;
+      height: 0;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.3);
+      transform: translate(-50%, -50%);
+      transition: width 0.4s ease, height 0.4s ease, opacity 0.4s ease;
+      opacity: 0;
+    }
+
+    #timer-widget .timer-controls button:active::after {
+      width: 120px;
+      height: 120px;
+      opacity: 1;
+      transition: 0s;
+    }
+
+    /* Animation d'entrée */
+    @keyframes slideUpFade {
+      from {
+        transform: translateX(-50%) translateY(150%);
+        opacity: 0;
+      }
+      to {
+        transform: translateX(-50%) translateY(0);
+        opacity: 1;
+      }
+    }
+
+    /* Animation de sortie */
+    @keyframes slideDownFade {
+      from {
+        transform: translateX(-50%) translateY(0);
+        opacity: 1;
+      }
+      to {
+        transform: translateX(-50%) translateY(150%);
+        opacity: 0;
+      }
+    }
+
+    /* Glow effect quand actif */
+    #timer-widget.active {
+      box-shadow: 
+        0 0 0 1px rgba(255, 255, 255, 0.06) inset,
+        0 24px 80px rgba(0, 0, 0, 0.6),
+        0 12px 40px rgba(0, 0, 0, 0.4),
+        0 4px 16px rgba(0, 0, 0, 0.3),
+        0 0 40px rgba(255, 159, 10, 0.2);
+    }
+
+    /* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+       📱 RESPONSIVE
+       ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+
+    @media (max-width: 480px) {
+      #timer-widget {
+        width: 94%;
+        padding: 20px;
+        border-radius: 28px;
+      }
+
+      #timer-widget .timer-circle {
+        width: 160px;
+        height: 160px;
+      }
+
+      #timer-time {
+        font-size: 42px;
+      }
+
+      #timer-widget .timer-controls button {
+        height: 44px;
+        font-size: 13px;
+      }
+    }
+
+    /* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+       🌈 THÈME CLAIR (OPTIONNEL)
+       ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+
+    @media (prefers-color-scheme: light) {
+      #timer-widget {
+        background: linear-gradient(
+          135deg,
+          rgba(250, 250, 252, 0.95) 0%,
+          rgba(240, 240, 245, 0.95) 100%
+        );
+        border-color: rgba(0, 0, 0, 0.08);
+      }
+
+      #timer-exercise-name {
+        color: #1c1c1e;
+      }
+
+      #timer-set-number {
+        color: rgba(28, 28, 30, 0.6);
+      }
+
+      #timer-time {
+        color: #1c1c1e;
+      }
+
+      #timer-close {
+        background: rgba(0, 0, 0, 0.05);
+        color: #1c1c1e;
+      }
+
+      #timer-widget .timer-progress-bg {
+        stroke: rgba(0, 0, 0, 0.08);
+      }
+    }
+  </style>
+</head>
+<body style="background: #000; min-height: 100vh; display: flex; align-items: center; justify-content: center; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;">
+
+  <!-- DEMO DU TIMER WIDGET -->
+  <div id="timer-widget" class="visible active">
+    <div class="timer-header">
+      <div class="timer-info">
+        <p id="timer-exercise-name">Trap Bar Deadlift</p>
+        <p id="timer-set-number">Série 2/5</p>
+      </div>
+      <button id="timer-close">×</button>
+    </div>
+
+    <div class="timer-display">
+      <div class="timer-circle">
+        <svg width="180" height="180" viewBox="0 0 180 180">
+          <defs>
+            <linearGradient id="timerGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+              <stop offset="0%" style="stop-color:#FF9F0A;stop-opacity:1" />
+              <stop offset="100%" style="stop-color:#FFB340;stop-opacity:1" />
+            </linearGradient>
+          </defs>
+          <circle class="timer-progress-bg" cx="90" cy="90" r="70"></circle>
+          <circle class="timer-progress-circle" cx="90" cy="90" r="70"></circle>
+        </svg>
+        <div id="timer-time">1:45</div>
+      </div>
+    </div>
+
+    <div class="timer-controls">
+      <button id="timer-pause">Pause</button>
+      <button id="timer-minus-15">-15s</button>
+      <button id="timer-plus-15">+15s</button>
+      <button id="timer-reset">Reset</button>
+      <button id="timer-skip">Skip</button>
+    </div>
+  </div>
+
+  <script>
+    // Demo animation du timer
+    let seconds = 105;
+    const timerWidget = document.getElementById('timer-widget');
+    const timerTime = document.getElementById('timer-time');
+    const progressCircle = document.querySelector('.timer-progress-circle');
+    const circumference = 2 * Math.PI * 70;
+    
+    setInterval(() => {
+      seconds--;
+      if (seconds < 0) seconds = 120;
+      
+      const mins = Math.floor(seconds / 60);
+      const secs = seconds % 60;
+      timerTime.textContent = `${mins}:${secs.toString().padStart(2, '0')}`;
+      
+      const progress = seconds / 120;
+      const offset = circumference * (1 - progress);
+      progressCircle.style.strokeDashoffset = offset;
+      
+      // Warning state < 10s
+      if (seconds <= 10) {
+        timerWidget.classList.add('warning');
+      } else {
+        timerWidget.classList.remove('warning');
+      }
+    }, 1000);
+  </script>
+
+</body>
+</html>
