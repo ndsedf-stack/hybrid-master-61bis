@@ -9,44 +9,44 @@ export class WorkoutRenderer {
         this.timerManager = null;
         console.log('🏋️ WorkoutRenderer initialisé');
     }
-    
+
     setTimerManager(timerManager) {
         this.timerManager = timerManager;
         console.log('✅ TimerManager connecté au WorkoutRenderer');
     }
-    
+
     render(dayData, weekNumber) {
-        console.log(`🎨 Rendu séance : ${dayData.day}, Semaine ${weekNumber}`);
-        
+        console.log('🎨 Rendu séance:', dayData.day, 'Semaine', weekNumber);
+
         if (!dayData || !dayData.exercises) {
             console.error('❌ Données séance invalides');
             return;
         }
-        
+
         const { day, name, location, exercises } = dayData;
-        
+
         this.container.innerHTML = `
             <div class="workout-view">
                 <!-- Bouton retour -->
                 <button id="back-to-home-btn" class="back-button">
                     ← Retour
                 </button>
-                
+
                 <div class="workout-header">
                     <div class="workout-title">
-                        <h2 class="workout-day">${day || 'Jour'}</h2>
-                        <p class="workout-name">${name || 'Entraînement'}</p>
-                        <span class="workout-location">📍 ${location || 'Maison'}</span>
+                        <span class="workout-day">${day || 'Séance'}</span>
+                        <span class="workout-name">${name || 'Entraînement'}</span>
+                        <span class="workout-location">${location || ''}</span>
                     </div>
                     <div class="workout-week">Semaine ${weekNumber}</div>
                 </div>
-                
+
                 <div class="exercises-container">
                     ${exercises.map((exercise, index) => this.renderExercise(exercise, index, weekNumber)).join('')}
                 </div>
             </div>
         `;
-        
+
         // Attacher event listener au bouton retour
         const backBtn = document.getElementById('back-to-home-btn');
         if (backBtn && this.onBack) {
@@ -55,29 +55,29 @@ export class WorkoutRenderer {
                 this.onBack();
             });
         }
-        
+
         // Attacher les event listeners pour les checkboxes
         this.attachCheckboxListeners(weekNumber);
     }
-    
+
     renderExercise(exercise, index, weekNumber) {
         const storageKey = `workout_${weekNumber}_${exercise.name}`;
         const savedState = this.loadExerciseState(storageKey);
-        
+
         return `
             <div class="exercise-card" data-exercise="${exercise.name}">
                 <div class="exercise-header">
                     <h3 class="exercise-name">${exercise.name}</h3>
                     ${exercise.variation ? `<span class="exercise-variation">${exercise.variation}</span>` : ''}
                 </div>
-                
+
                 ${exercise.notes ? `
                     <div class="exercise-notes">
                         <span class="notes-icon">💡</span>
                         ${exercise.notes}
                     </div>
                 ` : ''}
-                
+
                 <div class="exercise-params">
                     <div class="param">
                         <span class="param-label">Séries</span>
@@ -112,18 +112,18 @@ export class WorkoutRenderer {
                         </div>
                     ` : ''}
                 </div>
-                
+
                 <div class="series-tracker" data-exercise="${exercise.name}">
                     ${this.renderSeriesCheckboxes(exercise.sets, savedState)}
                 </div>
             </div>
         `;
     }
-    
+
     renderSeriesCheckboxes(totalSets, savedState = {}) {
         const setCount = parseInt(totalSets) || 4;
         let checkboxes = '<div class="series-list">';
-        
+
         for (let i = 1; i <= setCount; i++) {
             const isChecked = savedState[`set_${i}`] || false;
             checkboxes += `
@@ -141,37 +141,37 @@ export class WorkoutRenderer {
                 </div>
             `;
         }
-        
+
         checkboxes += '</div>';
         return checkboxes;
     }
-    
+
     attachCheckboxListeners(weekNumber) {
         const checkboxes = this.container.querySelectorAll('.series-item input[type="checkbox"]');
-        
+
         checkboxes.forEach(checkbox => {
             checkbox.addEventListener('change', (e) => {
                 this.handleSetComplete(e.target, weekNumber);
             });
         });
     }
-    
+
     handleSetComplete(checkbox, weekNumber) {
         const exerciseCard = checkbox.closest('.exercise-card');
         const exerciseName = exerciseCard.dataset.exercise;
         const setNumber = parseInt(checkbox.dataset.set);
         const totalSets = parseInt(checkbox.dataset.total);
         const seriesItem = checkbox.closest('.series-item');
-        
+
         console.log(`✅ Série ${setNumber}/${totalSets} - ${exerciseName}`);
-        
+
         // Animation visuelle
         if (checkbox.checked) {
             seriesItem.classList.add('completed');
-            
+
             // Timer automatique : Récupérer le temps de repos du programme
             const restTime = this.getRestTimeForExercise(exerciseCard);
-            
+
             // Démarrer le timer si pas la dernière série
             if (this.timerManager && setNumber < totalSets) {
                 console.log(`⏱️ Démarrage timer : ${restTime}s pour ${exerciseName}`);
@@ -179,20 +179,17 @@ export class WorkoutRenderer {
                     restTime,
                     exerciseName,
                     setNumber + 1,
-                    totalSets,
-                    () => {
-                        console.log('🔔 Timer terminé !');
-                    }
+                    totalSets
                 );
             }
         } else {
             seriesItem.classList.remove('completed');
         }
-        
+
         // Sauvegarder l'état
         this.saveExerciseState(exerciseName, setNumber, checkbox.checked, weekNumber);
     }
-    
+
     // Récupérer le temps de repos depuis le DOM
     getRestTimeForExercise(exerciseCard) {
         const params = exerciseCard.querySelectorAll('.param');
@@ -206,23 +203,23 @@ export class WorkoutRenderer {
         }
         return 120; // Valeur par défaut
     }
-    
+
     // ==================================================================
     // SAUVEGARDE D'ÉTAT
     // ==================================================================
-    
+
     saveExerciseState(exerciseName, setNumber, isChecked, weekNumber) {
         const storageKey = `workout_${weekNumber}_${exerciseName}`;
         const state = this.loadExerciseState(storageKey);
         state[`set_${setNumber}`] = isChecked;
-        
+
         try {
             localStorage.setItem(storageKey, JSON.stringify(state));
         } catch (error) {
             console.warn('⚠️ Erreur sauvegarde localStorage:', error);
         }
     }
-    
+
     loadExerciseState(storageKey) {
         try {
             const saved = localStorage.getItem(storageKey);
